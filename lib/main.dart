@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'pages/home.dart';
-import 'package:google_fonts/google_fonts.dart';
 
 void main() {
   runApp(const MyApp());
@@ -33,7 +32,6 @@ class _MyAppState extends State<MyApp> {
 
       // ----- {{ Light Theme }} ----- //
       theme: ThemeData.light().copyWith(
-        textTheme: GoogleFonts.bebasNeueTextTheme(ThemeData.light().textTheme),
         appBarTheme: const AppBarTheme(
           backgroundColor: Colors.black,
           iconTheme: IconThemeData(color: Colors.white),
@@ -44,8 +42,9 @@ class _MyAppState extends State<MyApp> {
           selectedItemColor: Colors.white,
           unselectedItemColor: Color.fromARGB(255, 56, 56, 56),
         ),
-        iconTheme: const IconThemeData(color: Color(0xFF3B1E54)),
-        primaryIconTheme: const IconThemeData(color: Color(0xFF3B1E54)),
+        iconTheme: const IconThemeData(color: Colors.black),
+        primaryIconTheme: const IconThemeData(color: Colors.black),
+        scaffoldBackgroundColor: Colors.white
       ),
       // ----- {{ End Light Theme }} ----- //
 
@@ -62,12 +61,12 @@ class _MyAppState extends State<MyApp> {
           unselectedItemColor: Colors.white70,
         ),
         iconTheme: const IconThemeData(
-          color: Color.fromARGB(255, 121, 60, 174),
+          color: Colors.white,
         ),
         primaryIconTheme: const IconThemeData(
-          color: Color.fromARGB(255, 121, 60, 174),
+          color: Colors.white,
         ),
-        cardColor: const Color(0xFF3B1E54),
+        cardColor: Colors.white,
       ),
 
       // ----- {{ End Dark Theme }} ----- //
@@ -75,7 +74,7 @@ class _MyAppState extends State<MyApp> {
       debugShowCheckedModeBanner: false,
       initialRoute: '/',
       routes: {
-        '/': (context) => MainPage(onToggleTheme: _toggleTheme),
+        '/': (context) => Home(onToggleTheme: _toggleTheme),
         // '/login': (context) => Login(),
         // '/home': (context) => MainPage(onToggleTheme: _toggleTheme),
         // '/attendance': (context) => Attendance(),

@@ -1,60 +1,137 @@
 import 'package:flutter/material.dart';
-import 'package:fiba_3x3/pages/page1.dart';
+import 'page1.dart';
+import 'package:fiba_3x3/components/socialMediaBar.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
-class MainPage extends StatefulWidget {
+class Home extends StatefulWidget {
   final VoidCallback onToggleTheme;
 
-  const MainPage({Key? key, required this.onToggleTheme}) : super(key: key);
+  const Home({Key? key, required this.onToggleTheme}) : super(key: key);
 
   @override
-  State<MainPage> createState() => _MainPageState();
+  State<Home> createState() => _HomeState();
 }
 
-class _MainPageState extends State<MainPage> {
-  int _selectedIndex = 0;
-
-  final List<Widget> _pages = [
-    MyWidget(),
-    Center(child: Text("Attendance Page", style: TextStyle(fontSize: 20))),
-    Center(
-      child: Text("Wheel of Fortune Page", style: TextStyle(fontSize: 20)),
-    ),
-  ];
-
-  void _onTabSelected(int index) {
-    setState(() {
-      _selectedIndex = index;
-    });
-  }
-
+class _HomeState extends State<Home> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Image.asset('assets/images/3x3Logo.svg', width: 50),
+        title: SvgPicture.asset('assets/images/3x3Logo.svg', height: 53),
         actions: [
           IconButton(
             icon: const Icon(Icons.brightness_6),
             onPressed: widget.onToggleTheme,
           ),
+          if (MediaQuery.of(context).size.width < 600)
+            Builder(
+              builder:
+                  (context) => IconButton(
+                    icon: Icon(Icons.menu),
+                    onPressed: () {
+                      Scaffold.of(context).openEndDrawer();
+                    },
+                  ),
+            ),
         ],
       ),
-      body: _pages[_selectedIndex],
-      bottomNavigationBar: BottomNavigationBar(
-        items: const [
-          BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.people),
-            label: 'Attendance',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.auto_mode),
-            label: 'Wheel of Fortune',
-          ),
-        ],
-        currentIndex: _selectedIndex,
-        onTap: _onTabSelected,
+      body: SingleChildScrollView(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            MainPage(), // Your main content
+            const SizedBox(height: 20), // Optional spacing
+            SocialMediaBar(), // Appears at the end of scrollable content
+          ],
+        ),
       ),
+      endDrawer: Drawer(
+        backgroundColor: const Color.fromARGB(255, 34, 34, 34),
+        child: SafeArea(
+          child: Column(
+            children: [
+              Container(
+                height: 70,
+                padding: EdgeInsets.all(16),
+                color: Color.fromARGB(255, 34, 34, 34),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    SizedBox(
+                      height: 60,
+                      width: 70,
+                      child: SvgPicture.asset('assets/images/3x3Logo.svg'),
+                    ),
+                    Builder(
+                      builder:
+                          (context) => IconButton(
+                            icon: Icon(Icons.close, color: Colors.white),
+                            padding: EdgeInsets.only(bottom: 8, left: 13),
+                            onPressed: () {
+                              Navigator.of(context).pop();
+                            },
+                          ),
+                    ),
+                  ],
+                ),
+              ),
+              Expanded(
+                child: ListView(
+                  padding: EdgeInsets.zero,
+                  children: <Widget>[
+                    _buildMenuItem('HOME', Icons.arrow_forward_ios_outlined),
+                    _buildMenuItem('3x3', Icons.arrow_forward_ios_outlined),
+                    _buildMenuItem('EVENTS', Icons.arrow_forward_ios_outlined),
+                    _buildMenuItem(
+                      'RANKINGS',
+                      Icons.arrow_forward_ios_outlined,
+                    ),
+                    _buildMenuItem(
+                      'OLYMPICS',
+                      Icons.arrow_forward_ios_outlined,
+                    ),
+                    _buildMenuItem('NEWS', Icons.arrow_forward_ios_outlined),
+                    _buildMenuItem('PLAYERS', Icons.arrow_forward_ios_outlined),
+                    _buildMenuItem(
+                      'ORGANIZERS',
+                      Icons.arrow_forward_ios_outlined,
+                    ),
+                    _buildMenuItem(
+                      'FEDERATIONS',
+                      Icons.arrow_forward_ios_outlined,
+                    ),
+                  ],
+                ),
+              ),
+              Container(
+                padding: EdgeInsets.all(16),
+                color: Colors.black,
+                height: 70,
+                width: double.infinity,
+                child: Text(
+                  'FIBA.BASKETBALL',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    color: Colors.amber,
+                    fontSize: 14,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildMenuItem(String title, IconData icon) {
+    return ListTile(
+      title: Text(title, style: TextStyle(color: Colors.white, fontSize: 16)),
+      trailing: Icon(icon, color: Colors.white, size: 18),
+      onTap: () {
+        Navigator.pop(context);
+      },
     );
   }
 }

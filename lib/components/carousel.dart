@@ -34,7 +34,6 @@ class _CarouselWidgetState extends State<CarouselWidget> {
   void initState() {
     super.initState();
 
-    // Auto-play logic
     Future.delayed(Duration.zero, () {
       startAutoPlay();
     });
@@ -91,65 +90,68 @@ class _CarouselWidgetState extends State<CarouselWidget> {
             },
           ),
 
-          Positioned.fill(
-            child: Align(
-              alignment: Alignment.bottomCenter,
-              child: Padding(
-                padding: const EdgeInsets.only(bottom: 60),
+          Positioned(
+            bottom: 60,
+            left: 0,
+            right: 0,
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 30),
+              child: Container(
+                width: 500,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(5),
+                  color: Colors.white.withOpacity(0.5),
+                ),
                 child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 30),
-                  child: Container(
-                    width: 500,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(5),
-                      color: Colors.white.withOpacity(0.5),
-                    ),
-                    child: Padding(
-                      padding: const EdgeInsets.only(bottom: 10),
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          Container(
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 12,
-                              vertical: 6,
-                            ),
-                            decoration: BoxDecoration(
-                              color: const Color(0xFF8b0000),
-                              borderRadius: BorderRadius.circular(4),
-                            ),
-                            child: Text(
-                              carouselContent[currentPage]['tag']!,
-                              style: const TextStyle(
-                                fontSize: 18,
-                                letterSpacing: -1.5,
-                                fontWeight: FontWeight.bold,
-                                color: Colors.white,
-                              ),
-                            ),
-                          ),
-                          const SizedBox(height: 8),
-                          Text(
-                            carouselContent[currentPage]['title']!,
-                            textAlign: TextAlign.center,
-                            style: const TextStyle(
-                              fontSize: 22,
-                              letterSpacing: -1.5,
-                              fontWeight: FontWeight.w800,
-                              color: Color(0xFF8b0000),
-                            ),
-                          ),
-                        ],
+                  padding: const EdgeInsets.only(bottom: 10),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      const SizedBox(height: 20), // Space for tag above
+                      Text(
+                        carouselContent[currentPage]['title']!,
+                        textAlign: TextAlign.center,
+                        style: const TextStyle(
+                          fontSize: 22,
+                          letterSpacing: -1.5,
+                          fontWeight: FontWeight.w800,
+                          color: Color(0xFF8b0000),
+                        ),
                       ),
-                    ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          ),
+          Positioned(
+            top: MediaQuery.of(context).size.height * 0.392,
+            left: 0,
+            right: 0,
+            child: Center(
+              child: Container(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 12,
+                  vertical: 6,
+                ),
+                decoration: BoxDecoration(
+                  color: const Color(0xFF8b0000),
+                  borderRadius: BorderRadius.circular(4),
+                ),
+                child: Text(
+                  carouselContent[currentPage]['tag']!,
+                  style: const TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white,
                   ),
                 ),
               ),
             ),
           ),
 
-          // Navigation Arrows
+          // Nav Arrows
           Positioned(
             top: 0,
             left: 16,
@@ -202,7 +204,7 @@ class _CarouselWidgetState extends State<CarouselWidget> {
             ),
           ),
 
-          // Dots Indicator
+          // Dots img
           Positioned(
             bottom: 20,
             left: 0,

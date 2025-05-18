@@ -1,25 +1,40 @@
 import 'package:flutter/material.dart';
 import 'package:fiba_3x3/components/carousel.dart';
+import 'package:fiba_3x3/components/cards.dart';
+import 'package:fiba_3x3/components/socialIcons.dart';
+// import 'package:fiba_3x3/components/promote.dart';
 
-class MyWidget extends StatefulWidget {
-  const MyWidget({super.key});
+class MainPage extends StatefulWidget {
+  const MainPage({super.key});
 
   @override
-  State<MyWidget> createState() => _MyWidgetState();
+  State<MainPage> createState() => _MainPageState();
 }
 
-class _MyWidgetState extends State<MyWidget> {
+class _MainPageState extends State<MainPage> {
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text('Some data above carousel'),
-
           CarouselWidget(),
-
-          const Text('More content below carousel'),
+          SizedBox(height: 40),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text(
+                'NEXT EVENTS',
+                textAlign: TextAlign.center,
+                style: TextStyle(fontSize: 25, fontWeight: FontWeight.w900),
+              ),
+            ],
+          ),
+          SizedBox(height: 40),
+          EventCard(),
+          SocialFollowSection(),
+          // Promote(),
+           SizedBox(height: 40),
         ],
       ),
     );
