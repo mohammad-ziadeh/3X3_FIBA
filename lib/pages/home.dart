@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
-import 'page1.dart';
+import 'landingPage.dart';
 import 'package:fiba_3x3/components/socialMediaBar.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 class Home extends StatefulWidget {
   final VoidCallback onToggleTheme;
 
-  const Home({Key? key, required this.onToggleTheme}) : super(key: key);
+  const Home({super.key, required this.onToggleTheme});
 
   @override
   State<Home> createState() => _HomeState();
@@ -39,9 +39,9 @@ class _HomeState extends State<Home> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            MainPage(), // Your main content
-            const SizedBox(height: 20), // Optional spacing
-            SocialMediaBar(), // Appears at the end of scrollable content
+            MainPage(),
+            const SizedBox(height: 20), 
+            SocialMediaBar(), 
           ],
         ),
       ),

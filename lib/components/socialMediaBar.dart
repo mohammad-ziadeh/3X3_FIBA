@@ -3,7 +3,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 class SocialMediaBar extends StatelessWidget {
-  const SocialMediaBar({Key? key}) : super(key: key);
+  const SocialMediaBar({super.key});
 
   @override
   Widget build(BuildContext context) {

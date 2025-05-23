@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'pages/home.dart';
+import 'pages/login.dart';
 
 void main() {
   runApp(const MyApp());
@@ -44,7 +45,7 @@ class _MyAppState extends State<MyApp> {
         ),
         iconTheme: const IconThemeData(color: Colors.black),
         primaryIconTheme: const IconThemeData(color: Colors.black),
-        scaffoldBackgroundColor: Colors.white
+        scaffoldBackgroundColor: Colors.white,
       ),
       // ----- {{ End Light Theme }} ----- //
 
@@ -60,12 +61,8 @@ class _MyAppState extends State<MyApp> {
           selectedItemColor: Colors.white,
           unselectedItemColor: Colors.white70,
         ),
-        iconTheme: const IconThemeData(
-          color: Colors.white,
-        ),
-        primaryIconTheme: const IconThemeData(
-          color: Colors.white,
-        ),
+        iconTheme: const IconThemeData(color: Colors.white),
+        primaryIconTheme: const IconThemeData(color: Colors.white),
         cardColor: Colors.white,
       ),
 
@@ -74,8 +71,8 @@ class _MyAppState extends State<MyApp> {
       debugShowCheckedModeBanner: false,
       initialRoute: '/',
       routes: {
-        '/': (context) => Home(onToggleTheme: _toggleTheme),
-        // '/login': (context) => Login(),
+        '/home': (context) => Home(onToggleTheme: _toggleTheme),
+        '/': (context) => LoginPage(),
         // '/home': (context) => MainPage(onToggleTheme: _toggleTheme),
         // '/attendance': (context) => Attendance(),
         // '/students': (context) => StudentsPage(onToggleTheme: _toggleTheme),
