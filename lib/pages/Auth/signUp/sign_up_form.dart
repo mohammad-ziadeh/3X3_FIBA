@@ -1,21 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:fiba_3x3/pages/login.dart';
-import 'package:page_transition/page_transition.dart';
+import 'package:fiba_3x3/pages/Auth/login/login.dart';
 
 class SignUpStepTwo extends StatelessWidget {
-  const SignUpStepTwo({super.key});
+  final VoidCallback onBack;
+
+  const SignUpStepTwo({super.key, required this.onBack});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      appBar: AppBar(
-        backgroundColor: Colors.white,
-        foregroundColor: Colors.black,
-        iconTheme: const IconThemeData(color: Colors.black),
-        title: const Text("Final step"),
-      ),
       body: SafeArea(
         child: LayoutBuilder(
           builder: (context, constraints) {
@@ -28,7 +23,6 @@ class SignUpStepTwo extends StatelessWidget {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
-                        const SizedBox(height: 16),
                         const Text(
                           "Personal Information",
                           style: TextStyle(
@@ -44,7 +38,7 @@ class SignUpStepTwo extends StatelessWidget {
                           style: TextStyle(color: Color(0xFF757575)),
                         ),
                         const SizedBox(height: 48),
-                        const SignUpFormStepTwo(),
+                        SignUpFormStepTwo(onBack: onBack),
                       ],
                     ),
                   ),
@@ -64,7 +58,8 @@ final OutlineInputBorder authOutlineInputBorder = const OutlineInputBorder(
 );
 
 class SignUpFormStepTwo extends StatelessWidget {
-  const SignUpFormStepTwo({super.key});
+  final VoidCallback onBack;
+  const SignUpFormStepTwo({super.key, required this.onBack});
 
   @override
   Widget build(BuildContext context) {
@@ -92,14 +87,7 @@ class SignUpFormStepTwo extends StatelessWidget {
           const SizedBox(height: 32),
           ElevatedButton(
             onPressed: () {
-              Navigator.push(
-                context,
-                PageTransition(
-                  type: PageTransitionType.rightToLeftWithFade,
-                  child: const LoginPage(),
-                  duration: const Duration(milliseconds: 500),
-                ),
-              );
+              onBack();
             },
             style: ElevatedButton.styleFrom(
               elevation: 0,
@@ -127,9 +115,11 @@ class SignUpFormStepTwo extends StatelessWidget {
     return TextFormField(
       obscureText: obscure,
       keyboardType: keyboardType,
+      style: const TextStyle(color: Colors.black),
       decoration: InputDecoration(
         hintText: hint,
         labelText: label,
+        labelStyle: TextStyle(color: Colors.black),
         floatingLabelBehavior: FloatingLabelBehavior.always,
         hintStyle: const TextStyle(color: Color(0xFF757575)),
         contentPadding: const EdgeInsets.symmetric(

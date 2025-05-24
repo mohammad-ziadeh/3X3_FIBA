@@ -112,7 +112,7 @@ class _CarouselWidgetState extends State<CarouselWidget> {
                         mainAxisSize: MainAxisSize.min,
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
-                          const SizedBox(height: 20), // Space for tag above
+                          const SizedBox(height: 20),
                           Text(
                             carouselContent[currentPage]['title']!,
                             textAlign: TextAlign.center,
@@ -130,7 +130,7 @@ class _CarouselWidgetState extends State<CarouselWidget> {
                 ),
               ),
               Positioned(
-                top: MediaQuery.of(context).size.height * 0.392,
+                top: MediaQuery.of(context).size.height * 0.342,
                 left: 0,
                 right: 0,
                 child: Center(

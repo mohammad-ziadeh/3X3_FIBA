@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
-import 'package:page_transition/page_transition.dart';
-import 'package:fiba_3x3/pages/signUp/sign_up_form.dart';
 
 class StepOnePage extends StatefulWidget {
+  final VoidCallback onNext;
+
+  const StepOnePage({super.key, required this.onNext});
   @override
   _StepOnePageState createState() => _StepOnePageState();
 }
@@ -51,7 +52,7 @@ class _StepOnePageState extends State<StepOnePage> {
       labelText: label,
       labelStyle: const TextStyle(color: Colors.black),
       hintText: hintText,
-      hintStyle: const TextStyle(color: Colors.black),
+      hintStyle: const TextStyle(color: Color(0xFF757575)),
       errorStyle: TextStyle(color: Colors.red),
       errorBorder: authOutlineInputBorder.copyWith(
         borderSide: const BorderSide(color: Colors.red),
@@ -77,12 +78,7 @@ class _StepOnePageState extends State<StepOnePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      appBar: AppBar(
-        title: const Text(" Step one"),
-        backgroundColor: Colors.white,
-        foregroundColor: Colors.black,
-        iconTheme: const IconThemeData(color: Colors.black),
-      ),
+
       body: SafeArea(
         child: LayoutBuilder(
           builder: (context, constraints) {
@@ -116,6 +112,7 @@ class _StepOnePageState extends State<StepOnePage> {
                           TextFormField(
                             controller: _firstNameController,
                             style: const TextStyle(color: Colors.black),
+
                             decoration: _styledInput(
                               "First Name",
                               hintText: "Enter your first name",
@@ -133,6 +130,7 @@ class _StepOnePageState extends State<StepOnePage> {
                           TextFormField(
                             controller: _lastNameController,
                             style: const TextStyle(color: Colors.black),
+
                             decoration: _styledInput(
                               "Last Name",
                               hintText: "Enter your last name",
@@ -151,7 +149,7 @@ class _StepOnePageState extends State<StepOnePage> {
                             isExpanded: true,
                             decoration: _styledInput(
                               "Gender",
-                              hintText: "Gender",
+                              hintText: "Select your gender",
                             ),
                             hint: const Text(
                               'Gender',
@@ -215,15 +213,7 @@ class _StepOnePageState extends State<StepOnePage> {
                           ElevatedButton(
                             onPressed: () {
                               if (_formKey.currentState!.validate()) {
-                                Navigator.push(
-                                  context,
-                                  PageTransition(
-                                    type:
-                                        PageTransitionType.rightToLeftWithFade,
-                                    child: const SignUpStepTwo(),
-                                    duration: const Duration(milliseconds: 500),
-                                  ),
-                                );
+                                widget.onNext();
                               }
                             },
                             style: ElevatedButton.styleFrom(

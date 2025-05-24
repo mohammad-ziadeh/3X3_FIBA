@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'landingPage.dart';
-import 'package:fiba_3x3/components/socialMediaBar.dart';
+import 'landin_page/landingPage.dart';
+import 'package:fiba_3x3/pages/landin_page/socialMediaBar.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 class Home extends StatefulWidget {
@@ -38,11 +38,7 @@ class _HomeState extends State<Home> {
       body: SingleChildScrollView(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            MainPage(),
-            const SizedBox(height: 20), 
-            SocialMediaBar(), 
-          ],
+          children: [MainPage(), const SizedBox(height: 20), SocialMediaBar()],
         ),
       ),
       endDrawer: Drawer(

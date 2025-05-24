@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'pages/home.dart';
-import 'pages/login.dart';
+import 'pages/Auth/auth_main.dart';
 
 void main() {
   runApp(const MyApp());
@@ -69,14 +69,8 @@ class _MyAppState extends State<MyApp> {
       // ----- {{ End Dark Theme }} ----- //
       themeMode: _themeMode,
       debugShowCheckedModeBanner: false,
-      initialRoute: '/',
-      routes: {
-        '/home': (context) => Home(onToggleTheme: _toggleTheme),
-        '/': (context) => LoginPage(),
-        // '/home': (context) => MainPage(onToggleTheme: _toggleTheme),
-        // '/attendance': (context) => Attendance(),
-        // '/students': (context) => StudentsPage(onToggleTheme: _toggleTheme),
-      },
+      home: AuthMain(onToggleTheme: _toggleTheme),
+      routes: {'/home': (context) => Home(onToggleTheme: _toggleTheme)},
     );
   }
 }

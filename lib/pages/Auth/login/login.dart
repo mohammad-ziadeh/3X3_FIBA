@@ -1,56 +1,61 @@
 import 'package:flutter/material.dart';
-// TODO: add flutter_svg package
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:fiba_3x3/pages/signUp/gender_and_birth.dart';
-import 'package:page_transition/page_transition.dart';
+import 'package:fiba_3x3/components/search_player_event.dart';
 
 class LoginPage extends StatelessWidget {
-  const LoginPage({super.key});
+  final VoidCallback onNext;
+  const LoginPage({super.key, required this.onNext});
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      appBar: AppBar(
-        backgroundColor: Colors.white,
-        elevation: 0,
-        title: const Text("Sign In", style: TextStyle(color: Colors.black)),
-        iconTheme: const IconThemeData(color: Colors.black),
-      ),
       body: SafeArea(
         child: LayoutBuilder(
           builder: (context, constraints) {
-            return Center(
+            return SingleChildScrollView(
               child: ConstrainedBox(
-                constraints: const BoxConstraints(maxWidth: 700),
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 16),
-                  child: SingleChildScrollView(
-                    child: Column(
-                      children: [
-                        const SizedBox(height: 24),
-                        const Text(
-                          "Welcome Back",
-                          style: TextStyle(
-                            color: Colors.black,
-                            fontSize: 28,
-                            fontWeight: FontWeight.bold,
+                constraints: BoxConstraints(minHeight: constraints.maxHeight),
+                child: IntrinsicHeight(
+                  child: Column(
+                    children: [
+                      const SizedBox(height: 30),
+                      SearchPlayerEvent(),
+                      const SizedBox(height: 40),
+                      Center(
+                        child: ConstrainedBox(
+                          constraints: const BoxConstraints(maxWidth: 700),
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 16),
+                            child: Column(
+                              children: [
+                                const SizedBox(height: 24),
+                                const Text(
+                                  "Welcome Back",
+                                  style: TextStyle(
+                                    color: Colors.black,
+                                    fontSize: 28,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                                const SizedBox(height: 12),
+                                const Text(
+                                  "Log in to play.fiba3x3.com!\nWith your email and password",
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(
+                                    color: Color(0xFF757575),
+                                    fontSize: 16,
+                                  ),
+                                ),
+                                const SizedBox(height: 48),
+                                const SignInForm(),
+                                const SizedBox(height: 72),
+                                NoAccountText(onNext: onNext),
+                              ],
+                            ),
                           ),
                         ),
-                        const SizedBox(height: 12),
-                        const Text(
-                          "Sign in with your email and password\nor continue with social media",
-                          textAlign: TextAlign.center,
-                          style: TextStyle(
-                            color: Color(0xFF757575),
-                            fontSize: 16,
-                          ),
-                        ),
-                        const SizedBox(height: 48),
-                        const SignInForm(),
-                        const SizedBox(height: 72),
-                        const NoAccountText(),
-                      ],
-                    ),
+                      ),
+                    ],
                   ),
                 ),
               ),
@@ -78,9 +83,11 @@ class SignInForm extends StatelessWidget {
           TextFormField(
             onSaved: (email) {},
             onChanged: (email) {},
+            style: const TextStyle(color: Colors.black),
             textInputAction: TextInputAction.next,
             decoration: InputDecoration(
-              hintText: "Enter your email",
+              hintText: "user@example.com",
+              labelStyle: TextStyle(color: Colors.black),
               labelText: "Email",
               floatingLabelBehavior: FloatingLabelBehavior.always,
               hintStyle: const TextStyle(color: Color(0xFF757575)),
@@ -104,9 +111,11 @@ class SignInForm extends StatelessWidget {
             child: TextFormField(
               onSaved: (password) {},
               onChanged: (password) {},
+              style: const TextStyle(color: Colors.black),
               obscureText: true,
               decoration: InputDecoration(
-                hintText: "Enter your password",
+                labelStyle: TextStyle(color: Colors.black),
+                hintText: "Password",
                 labelText: "Password",
                 floatingLabelBehavior: FloatingLabelBehavior.always,
                 hintStyle: const TextStyle(color: Color(0xFF757575)),
@@ -149,7 +158,9 @@ class SignInForm extends StatelessWidget {
 }
 
 class NoAccountText extends StatelessWidget {
-  const NoAccountText({Key? key}) : super(key: key);
+  final VoidCallback onNext;
+
+  const NoAccountText({Key? key, required this.onNext}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -157,20 +168,11 @@ class NoAccountText extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         const Text(
-          "Don’t have an account? ",
+          "Don't have a FIBA 3x3 profile yet? ",
           style: TextStyle(color: Color(0xFF757575)),
         ),
         GestureDetector(
-          onTap: () {
-            Navigator.push(
-              context,
-              PageTransition(
-                type: PageTransitionType.rightToLeftWithFade,
-                child: StepOnePage(),
-                duration: const Duration(milliseconds: 500),
-              ),
-            );
-          },
+          onTap: onNext,
           child: const Text("Sign Up", style: TextStyle(color: Colors.black)),
         ),
       ],
