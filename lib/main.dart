@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'pages/home.dart';
+import 'pages/profile/profile.dart';
 import 'pages/Auth/auth_main.dart';
+import 'widgets/search.dart/search_event.dart';
+import 'widgets/search.dart/search_player.dart';
 
 void main() {
   runApp(const MyApp());
@@ -70,7 +73,13 @@ class _MyAppState extends State<MyApp> {
       themeMode: _themeMode,
       debugShowCheckedModeBanner: false,
       home: AuthMain(onToggleTheme: _toggleTheme),
-      routes: {'/home': (context) => Home(onToggleTheme: _toggleTheme)},
+      routes: {
+        '/home': (context) => Home(onToggleTheme: _toggleTheme),
+        '/profile': (context) => ProfilePage(onToggleTheme: _toggleTheme),
+        '/search-event': (context) => SearchEvent(onToggleTheme: _toggleTheme),
+        '/search-player':
+            (context) => SearchPlayer(onToggleTheme: _toggleTheme),
+      },
     );
   }
 }

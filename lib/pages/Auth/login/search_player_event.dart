@@ -11,10 +11,12 @@ class SearchPlayerEvent extends StatelessWidget {
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 10),
           child: GestureDetector(
-            onTap: () {},
+            onTap: () {
+              Navigator.pushNamed(context, '/search-event');
+            },
             child: HoverContainer(
               width: 420,
-              height: 110,
+              height: 120,
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(2),
                 color: const Color.fromARGB(255, 31, 31, 31),
@@ -66,10 +68,12 @@ class SearchPlayerEvent extends StatelessWidget {
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 10),
           child: GestureDetector(
-            onTap: () {},
+            onTap: () {
+              Navigator.pushNamed(context, '/search-player');
+            },
             child: HoverContainer(
               width: 420,
-              height: 110,
+              height: 120,
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(2),
                 color: const Color.fromARGB(255, 31, 31, 31),

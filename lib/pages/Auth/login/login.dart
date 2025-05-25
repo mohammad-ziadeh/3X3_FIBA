@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:fiba_3x3/components/search_player_event.dart';
+import 'package:fiba_3x3/pages/Auth/login/search_player_event.dart';
 
 class LoginPage extends StatelessWidget {
   final VoidCallback onNext;
@@ -48,7 +48,7 @@ class LoginPage extends StatelessWidget {
                                 ),
                                 const SizedBox(height: 48),
                                 const SignInForm(),
-                                const SizedBox(height: 72),
+                                const SizedBox(height: 15),
                                 NoAccountText(onNext: onNext),
                               ],
                             ),
