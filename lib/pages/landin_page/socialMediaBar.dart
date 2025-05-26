@@ -1,3 +1,5 @@
+// ignore_for_file: deprecated_member_use
+
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -16,10 +18,7 @@ class SocialMediaBar extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              SvgPicture.asset(
-                'assets/images/3x3Logo.svg',
-                height: 30,
-              ),
+              SvgPicture.asset('assets/images/3x3Logo.svg', height: 30),
             ],
           ),
 
@@ -60,7 +59,10 @@ class SocialMediaBar extends StatelessWidget {
     );
   }
 
-  List<Widget> _buildMenuItems(BuildContext context, {required String section}) {
+  List<Widget> _buildMenuItems(
+    BuildContext context, {
+    required String section,
+  }) {
     final Map<String, List<String>> menu = {
       '3x3': [
         'Vision',
@@ -74,11 +76,7 @@ class SocialMediaBar extends StatelessWidget {
         'FAQ',
         'Glossary',
       ],
-      'Events': [
-        'Quick links',
-        'Calendar',
-        'How to Qualify',
-      ],
+      'Events': ['Quick links', 'Calendar', 'How to Qualify'],
     };
 
     final List<String> items = menu[section] ?? [];
@@ -110,6 +108,7 @@ class SocialMediaBar extends StatelessWidget {
       ListTile(
         title: Text(
           'How to Qualify',
+
           style: TextStyle(color: Colors.white.withOpacity(0.8), fontSize: 14),
         ),
       ),
@@ -121,16 +120,9 @@ class SocialMediaBar extends StatelessWidget {
       padding: const EdgeInsets.symmetric(horizontal: 8),
       child: Column(
         children: [
-          FaIcon(
-            icon,
-            size: 24,
-            color: Colors.white,
-          ),
+          FaIcon(icon, size: 24, color: Colors.white),
           const SizedBox(height: 4),
-          Text(
-            label,
-            style: TextStyle(fontSize: 12, color: Colors.white),
-          ),
+          Text(label, style: TextStyle(fontSize: 12, color: Colors.white)),
         ],
       ),
     );

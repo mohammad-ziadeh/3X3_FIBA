@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 
 class PlayerAboutPage extends StatelessWidget {
+  const PlayerAboutPage({super.key});
+
   @override
   Widget build(BuildContext context) {
     final double screenWidth = MediaQuery.of(context).size.width;
@@ -8,7 +10,7 @@ class PlayerAboutPage extends StatelessWidget {
     final double labelFontSize = screenWidth > 600 ? 20 : 16;
     final double valueFontSize = screenWidth > 600 ? 24 : 16;
 
-    Widget _buildDetailRow({required String label, required String value}) {
+    Widget buildDetailRow({required String label, required String value}) {
       return Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
@@ -48,19 +50,19 @@ class PlayerAboutPage extends StatelessWidget {
             Expanded(
               child: ListView(
                 children: [
-                  _buildDetailRow(label: 'Nationality', value: 'Jordan 🇯🇴'),
+                  buildDetailRow(label: 'Nationality', value: 'Jordan 🇯🇴'),
                   const Divider(),
 
-                  _buildDetailRow(label: 'Hometown', value: 'Aqaba, Jordan'),
+                  buildDetailRow(label: 'Hometown', value: 'Aqaba, Jordan'),
                   const Divider(),
 
-                  _buildDetailRow(label: 'Gender', value: 'Male'),
+                  buildDetailRow(label: 'Gender', value: 'Male'),
                   const Divider(),
 
-                  _buildDetailRow(label: 'Age', value: '19'),
+                  buildDetailRow(label: 'Age', value: '19'),
                   const Divider(),
 
-                  _buildDetailRow(label: 'Height', value: '-'),
+                  buildDetailRow(label: 'Height', value: '-'),
                   const Divider(),
 
                   LayoutBuilder(

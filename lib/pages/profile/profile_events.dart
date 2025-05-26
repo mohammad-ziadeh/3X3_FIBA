@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 
 class PlayedEventsPage extends StatelessWidget {
+  const PlayedEventsPage({super.key});
+
   @override
   Widget build(BuildContext context) {
     final List<Map<String, dynamic>> events = [
@@ -43,7 +45,6 @@ class PlayedEventsPage extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Scrollable DataTable with no overflow
           Expanded(
             child: SingleChildScrollView(
               scrollDirection: Axis.horizontal,

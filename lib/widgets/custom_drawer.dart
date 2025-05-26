@@ -45,7 +45,12 @@ class CustomDrawer extends StatelessWidget {
                   ),
                   _DrawerMenuItem(title: 'RANKINGS'),
                   _DrawerMenuItem(title: 'OLYMPICS'),
-                  _DrawerMenuItem(title: 'NEWS'),
+                  _DrawerMenuItem(
+                    title: 'RULES',
+                    onTap: () {
+                      Navigator.of(context).pushNamed('/rules');
+                    },
+                  ),
                   _DrawerMenuItem(
                     title: 'PLAYERS',
                     onTap: () {

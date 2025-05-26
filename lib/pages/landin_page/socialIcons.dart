@@ -69,6 +69,7 @@ class SocialFollowSection extends StatelessWidget {
             color: backgroundColor,
             boxShadow: [
               BoxShadow(
+                // ignore: deprecated_member_use
                 color: Colors.black.withOpacity(0.3),
                 spreadRadius: 0,
                 blurRadius: 1,

@@ -3,6 +3,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:fiba_3x3/widgets/custom_drawer.dart';
 import 'package:fiba_3x3/pages/profile/profile_about.dart';
 import 'package:fiba_3x3/pages/profile/profile_events.dart';
+import 'package:lottie/lottie.dart';
 
 class ProfilePage extends StatefulWidget {
   final VoidCallback onToggleTheme;
@@ -161,7 +162,7 @@ class _ProfilePageState extends State<ProfilePage>
 }
 
 class _ProfileInfoRow extends StatelessWidget {
-  const _ProfileInfoRow({Key? key}) : super(key: key);
+  const _ProfileInfoRow();
 
   final List<ProfileInfoItem> _items = const [
     ProfileInfoItem("Rank", 1),
@@ -215,7 +216,7 @@ class ProfileInfoItem {
 }
 
 class _TopPortion extends StatelessWidget {
-  const _TopPortion({Key? key}) : super(key: key);
+  const _TopPortion();
 
   @override
   Widget build(BuildContext context) {
@@ -246,7 +247,6 @@ class _TopPortion extends StatelessWidget {
               children: [
                 Container(
                   decoration: const BoxDecoration(
-                    color: Colors.black,
                     shape: BoxShape.circle,
                     image: DecorationImage(
                       fit: BoxFit.cover,
@@ -256,13 +256,44 @@ class _TopPortion extends StatelessWidget {
                     ),
                   ),
                 ),
+
                 Positioned(
                   bottom: 0,
-                  right: 0,
-                  child: CircleAvatar(
-                    radius: 20,
-                    backgroundColor: Colors.amber,
-                    child: Text('1'),
+                  right: -27,
+
+                  child: SizedBox(
+                    width: 100,
+                    height: 100,
+                    child: Stack(
+                      alignment: Alignment.center,
+                      children: [
+                        Lottie.network(
+                          'https://lottie.host/68c96857-fb87-4515-ae31-4176e26840e6/EEQKgYEzBh.json',
+                          repeat: true,
+                          animate: true,
+                          fit: BoxFit.contain,
+                        ),
+                        Positioned(
+                          top: 70,
+
+                          child: Text(
+                            '1',
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 14,
+                              fontWeight: FontWeight.bold,
+                              shadows: [
+                                Shadow(
+                                  blurRadius: 4,
+                                  color: Colors.black,
+                                  offset: Offset(1, 1),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
                 ),
               ],

@@ -8,7 +8,7 @@ import 'package:animations/animations.dart';
 class AuthMain extends StatefulWidget {
   final VoidCallback onToggleTheme;
 
-  const AuthMain({Key? key, required this.onToggleTheme}) : super(key: key);
+  const AuthMain({super.key, required this.onToggleTheme});
 
   @override
   State<AuthMain> createState() => _AuthMainState();

@@ -160,7 +160,7 @@ class SignInForm extends StatelessWidget {
 class NoAccountText extends StatelessWidget {
   final VoidCallback onNext;
 
-  const NoAccountText({Key? key, required this.onNext}) : super(key: key);
+  const NoAccountText({super.key, required this.onNext});
 
   @override
   Widget build(BuildContext context) {

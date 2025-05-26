@@ -4,6 +4,7 @@ import 'pages/profile/profile.dart';
 import 'pages/Auth/auth_main.dart';
 import 'widgets/search.dart/search_event.dart';
 import 'widgets/search.dart/search_player.dart';
+import 'pages/rules/rules.dart';
 
 void main() {
   runApp(const MyApp());
@@ -76,6 +77,7 @@ class _MyAppState extends State<MyApp> {
       routes: {
         '/home': (context) => Home(onToggleTheme: _toggleTheme),
         '/profile': (context) => ProfilePage(onToggleTheme: _toggleTheme),
+        '/rules': (context) => RulesPage(onToggleTheme: _toggleTheme),
         '/search-event': (context) => SearchEvent(onToggleTheme: _toggleTheme),
         '/search-player':
             (context) => SearchPlayer(onToggleTheme: _toggleTheme),

@@ -108,12 +108,12 @@ class _SearchPlayerState extends State<SearchPlayer>
             const SizedBox(height: 30),
             SearchAnchor.bar(
               barLeading: Icon(Icons.search, color: Colors.black),
-              barBackgroundColor: MaterialStateProperty.all(Colors.white),
+              barBackgroundColor: WidgetStateProperty.all(Colors.white),
               barHintText: 'Search for players (minimum 3 characters)',
-              barTextStyle: MaterialStateProperty.all(
+              barTextStyle: WidgetStateProperty.all(
                 TextStyle(color: Colors.black),
               ),
-              barHintStyle: MaterialStateProperty.all(
+              barHintStyle: WidgetStateProperty.all(
                 TextStyle(color: Color(0xFF757575)),
               ),
               suggestionsBuilder: (context, controller) {
