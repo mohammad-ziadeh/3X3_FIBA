@@ -1,3 +1,4 @@
+import 'package:fiba_3x3/pages/ball_info/ball.dart';
 import 'package:flutter/material.dart';
 import 'pages/home.dart';
 import 'pages/profile/profile.dart';
@@ -77,6 +78,8 @@ class _MyAppState extends State<MyApp> {
       routes: {
         '/home': (context) => Home(onToggleTheme: _toggleTheme),
         '/profile': (context) => ProfilePage(onToggleTheme: _toggleTheme),
+        '/ball-info':
+            (context) => Official3x3BallPage(onToggleTheme: _toggleTheme),
         '/rules': (context) => RulesPage(onToggleTheme: _toggleTheme),
         '/search-event': (context) => SearchEvent(onToggleTheme: _toggleTheme),
         '/search-player':

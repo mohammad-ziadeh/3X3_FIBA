@@ -1,11 +1,5 @@
-// ignore_for_file: unused_local_variable
-
-import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
-import 'package:dio/dio.dart';
-import 'package:path_provider/path_provider.dart';
-import 'package:permission_handler/permission_handler.dart';
-import 'dart:html' as html;
+import 'package:fiba_3x3/pages/rules/pdf_downloader/pdf_downloader.dart';
 
 class Document {
   final String name;
@@ -29,7 +23,21 @@ class ScoreList extends StatelessWidget {
           'https://www.adobe.com/support/products/enterprise/knowledgecenter/media/c4611_sample_explain.pdf',
       updated: '20/02/2024',
     ),
+    Document(
+      name: 'FIBA 3x3 Basketball Rules',
+      url:
+          'https://www.adobe.com/support/products/enterprise/knowledgecenter/media/c4611_sample_explain.pdf',
+      updated: '20/02/2024',
+    ),
+    Document(
+      name: 'FIBA 3x3 Basketball version 2',
+      url:
+          'https://www.adobe.com/support/products/enterprise/knowledgecenter/media/c4611_sample_explain.pdf',
+      updated: '20/02/2024',
+    ),
   ];
+
+  ScoreList({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -40,54 +48,19 @@ class ScoreList extends StatelessWidget {
         return Column(
           children: [
             ListTile(
-              leading: Icon(Icons.picture_as_pdf, color: Colors.red),
+              leading: const Icon(Icons.picture_as_pdf, color: Colors.red),
               title: Text(
                 doc.name,
-                style: TextStyle(fontWeight: FontWeight.bold),
+                style: const TextStyle(fontWeight: FontWeight.bold),
               ),
               subtitle: Text('Updated: ${doc.updated}'),
-              trailing: Icon(Icons.download),
+              trailing: const Icon(Icons.download),
               onTap: () => downloadFile(context, doc.url, '${doc.name}.pdf'),
             ),
-            SizedBox(height: 20),
+            const SizedBox(height: 15),
           ],
         );
       },
     );
-  }
-
-  Future<void> downloadFile(
-    BuildContext context,
-    String url,
-    String filename,
-  ) async {
-    if (kIsWeb) {
-      final anchor =
-          html.AnchorElement(href: url)
-            ..setAttribute("download", filename)
-            ..click();
-    } else {
-      final status = await Permission.storage.request();
-      if (!status.isGranted) {
-        ScaffoldMessenger.of(
-          context,
-        ).showSnackBar(SnackBar(content: Text('Storage permission denied')));
-        return;
-      }
-
-      try {
-        final dir = await getExternalStorageDirectory();
-        final path = '${dir?.path}/$filename';
-
-        await Dio().download(url, path);
-        ScaffoldMessenger.of(
-          context,
-        ).showSnackBar(SnackBar(content: Text('Downloaded to $path')));
-      } catch (e) {
-        ScaffoldMessenger.of(
-          context,
-        ).showSnackBar(SnackBar(content: Text('Download failed: $e')));
-      }
-    }
   }
 }

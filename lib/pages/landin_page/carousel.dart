@@ -39,23 +39,25 @@ class _CarouselWidgetState extends State<CarouselWidget> {
     });
   }
 
-  void startAutoPlay() {
-    Future.doWhile(() async {
+  void startAutoPlay() async {
+    while (true) {
       await Future.delayed(autoPlayInterval);
+
       if (currentPage < images.length - 1) {
-        _controller.nextPage(
+        await _controller.nextPage(
           duration: const Duration(milliseconds: 500),
           curve: Curves.easeInOut,
         );
+        currentPage++;
       } else {
-        _controller.animateToPage(
+        await _controller.animateToPage(
           0,
           duration: const Duration(milliseconds: 500),
           curve: Curves.easeInOut,
         );
+        currentPage = 0;
       }
-      return true;
-    });
+    }
   }
 
   @override
@@ -208,7 +210,6 @@ class _CarouselWidgetState extends State<CarouselWidget> {
                 ),
               ),
 
-              // Dots img
               Positioned(
                 bottom: 20,
                 left: 0,

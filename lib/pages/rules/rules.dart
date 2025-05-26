@@ -130,7 +130,7 @@ class _RulesPageState extends State<RulesPage>
             Stack(
               children: [
                 Image.asset(
-                  'images/dunk.jpg',
+                  'assets/images/dunk.jpg',
                   width: double.infinity,
                   height: 500,
                   fit: BoxFit.cover,

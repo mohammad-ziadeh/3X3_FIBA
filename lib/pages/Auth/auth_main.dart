@@ -44,7 +44,6 @@ class _AuthMainState extends State<AuthMain> {
                 ? IconButton(
                   icon: const Icon(Icons.arrow_back),
                   onPressed: () {
-                    // Navigate back to the previous page
                     if (_selectedIndex == 2) {
                       _navigateTo(1);
                     } else if (_selectedIndex == 1) {
@@ -55,7 +54,7 @@ class _AuthMainState extends State<AuthMain> {
                 : null,
       ),
       body: PageTransitionSwitcher(
-        duration: const Duration(milliseconds: 150),
+        duration: const Duration(milliseconds: 280),
         transitionBuilder: (child, animation, secondaryAnimation) {
           return SharedAxisTransition(
             animation: animation,

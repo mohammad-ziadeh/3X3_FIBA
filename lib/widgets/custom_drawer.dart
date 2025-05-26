@@ -35,7 +35,12 @@ class CustomDrawer extends StatelessWidget {
               child: ListView(
                 padding: EdgeInsets.zero,
                 children: [
-                  _DrawerMenuItem(title: 'HOME'),
+                  _DrawerMenuItem(
+                    title: 'HOME',
+                    onTap: () {
+                      Navigator.of(context).pushNamed('/home');
+                    },
+                  ),
                   _DrawerMenuItem(title: '3x3'),
                   _DrawerMenuItem(
                     title: 'EVENTS',
@@ -44,7 +49,12 @@ class CustomDrawer extends StatelessWidget {
                     },
                   ),
                   _DrawerMenuItem(title: 'RANKINGS'),
-                  _DrawerMenuItem(title: 'OLYMPICS'),
+                  _DrawerMenuItem(
+                    title: 'BALL INFO',
+                    onTap: () {
+                      Navigator.of(context).pushNamed('/ball-info');
+                    },
+                  ),
                   _DrawerMenuItem(
                     title: 'RULES',
                     onTap: () {
