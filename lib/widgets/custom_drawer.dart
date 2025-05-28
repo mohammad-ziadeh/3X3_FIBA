@@ -41,6 +41,12 @@ class CustomDrawer extends StatelessWidget {
                       Navigator.of(context).pushNamed('/home');
                     },
                   ),
+                  _DrawerMenuItem(
+                    title: 'PROFILE',
+                    onTap: () {
+                      Navigator.of(context).pushNamed('/profile');
+                    },
+                  ),
                   _DrawerMenuItem(title: '3x3'),
                   _DrawerMenuItem(
                     title: 'EVENTS',

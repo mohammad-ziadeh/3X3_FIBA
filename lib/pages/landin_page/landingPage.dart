@@ -34,7 +34,7 @@ class _MainPageState extends State<MainPage> {
           EventCard(),
           SocialFollowSection(),
           // Promote(),
-           SizedBox(height: 40),
+          SizedBox(height: 40),
         ],
       ),
     );

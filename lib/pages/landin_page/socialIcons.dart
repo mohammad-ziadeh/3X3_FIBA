@@ -12,7 +12,11 @@ class SocialFollowSection extends StatelessWidget {
           padding: const EdgeInsets.all(16.0),
           child: Text(
             'FOLLOW FIBA 3X3',
-            style: TextStyle(fontSize: 25, fontWeight: FontWeight.w900 , letterSpacing: -1,),
+            style: TextStyle(
+              fontSize: 25,
+              fontWeight: FontWeight.w900,
+              letterSpacing: -1,
+            ),
             textAlign: TextAlign.center,
           ),
         ),
@@ -59,74 +63,89 @@ class SocialFollowSection extends StatelessWidget {
     required String subtitle,
     required String buttonText,
   }) {
-    return Stack(
-      alignment: Alignment.centerRight,
-      children: [
-        Container(
-          margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 18),
-          padding: const EdgeInsets.all(16),
-          decoration: BoxDecoration(
-            color: backgroundColor,
-            boxShadow: [
-              BoxShadow(
-                // ignore: deprecated_member_use
-                color: Colors.black.withOpacity(0.3),
-                spreadRadius: 0,
-                blurRadius: 1,
-                offset: Offset(0, 4),
-              ),
-            ],
-          ),
-          child: Row(
-            children: [
-              FaIcon(icon, color: Colors.white, size: 32),
-              const SizedBox(width: 16),
+    return Align(
+      alignment: Alignment.center,
+      child: Stack(
+        alignment: Alignment.centerRight,
+        children: [
+          Container(
+            constraints: BoxConstraints(minWidth: 300, maxWidth: 1100),
+            margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 18),
+            padding: const EdgeInsets.all(16),
+            decoration: BoxDecoration(
+              color: backgroundColor,
+              boxShadow: [
+                BoxShadow(
+                  // ignore: deprecated_member_use
+                  color: Colors.black.withOpacity(0.3),
+                  spreadRadius: 0,
+                  blurRadius: 1,
+                  offset: Offset(0, 4),
+                ),
+              ],
+            ),
+            child: Row(
+              children: [
+                FaIcon(icon, color: Colors.white, size: 32),
+                const SizedBox(width: 16),
 
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    title,
-                    style: TextStyle(
-                      letterSpacing: -1,
-                      color: Colors.white,
-                      fontSize: 20,
-                      fontWeight: FontWeight.w900,
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      title,
+                      style: TextStyle(
+                        letterSpacing: -1,
+                        color: Colors.white,
+                        fontSize: 20,
+                        fontWeight: FontWeight.w900,
+                      ),
                     ),
-                  ),
-                  Text(
-                    subtitle,
-                    style: TextStyle(color: Colors.white, fontSize: 14,letterSpacing: -1, fontWeight: FontWeight.w700),
-                  ),
-                ],
-              ),
-              const Spacer(),
-            ],
+                    Text(
+                      subtitle,
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 14,
+                        letterSpacing: -1,
+                        fontWeight: FontWeight.w700,
+                      ),
+                    ),
+                  ],
+                ),
+                const Spacer(),
+              ],
+            ),
           ),
-        ),
 
-        Positioned(
-          
-          right: 25,
-          bottom: -3,
-          child: ElevatedButton(
-            onPressed: () {},
-            style: ElevatedButton.styleFrom(
-              backgroundColor: Colors.white,
-              foregroundColor: Colors.black,
-              elevation: 9,
-              shape: RoundedRectangleBorder(
-                side: BorderSide(color: backgroundColor, width: 2),
+          Positioned(
+            right: 25,
+            bottom: 0,
+            child: ElevatedButton(
+              onPressed: () {},
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.white,
+                foregroundColor: Colors.black,
+                elevation: 3,
+                shape: RoundedRectangleBorder(
+                  side: BorderSide(color: backgroundColor, width: 2),
+                ),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 16,
+                  vertical: 8,
+                ),
               ),
-              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-            ),
-            child: Text(
-              buttonText,
-              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold,letterSpacing: -1,),
+              child: Text(
+                buttonText,
+                style: TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                  letterSpacing: -1,
+                ),
+              ),
             ),
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 }

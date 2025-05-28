@@ -1,5 +1,5 @@
+import 'package:fiba_3x3/widgets/appBar.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:fiba_3x3/widgets/custom_drawer.dart';
 import 'package:fiba_3x3/pages/profile/profile_about.dart';
 import 'package:fiba_3x3/pages/profile/profile_events.dart';
@@ -32,42 +32,7 @@ class _ProfilePageState extends State<ProfilePage>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Row(
-          children: [
-            GestureDetector(
-              onTap: () {
-                Navigator.of(context).pushNamed('/home');
-              },
-              child: SvgPicture.asset('assets/images/3x3Logo.svg', height: 53),
-            ),
-            SizedBox(width: 20),
-            GestureDetector(
-              onTap: () {
-                Navigator.of(context).pushNamed('/profile');
-              },
-              child: Text('Profile', style: TextStyle(fontSize: 20)),
-            ),
-          ],
-        ),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.brightness_6),
-            onPressed: widget.onToggleTheme,
-          ),
-          if (MediaQuery.of(context).size.width < 600)
-            Builder(
-              builder:
-                  (context) => IconButton(
-                    icon: Icon(Icons.menu),
-                    onPressed: () {
-                      Scaffold.of(context).openEndDrawer();
-                    },
-                  ),
-            ),
-        ],
-      ),
-
+      appBar: ResponsiveAppBar(onToggleTheme: widget.onToggleTheme),
       body: Column(
         children: [
           const Expanded(flex: 2, child: _TopPortion()),

@@ -1,4 +1,5 @@
 import 'package:fiba_3x3/pages/ball_info/ball.dart';
+import 'package:fiba_3x3/widgets/smoothScroll.dart';
 import 'package:flutter/material.dart';
 import 'pages/home.dart';
 import 'pages/profile/profile.dart';
@@ -35,7 +36,7 @@ class _MyAppState extends State<MyApp> {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'FIBA 3X3',
-
+      scrollBehavior: MyCustomScrollBehavior(),
       // ----- {{ Light Theme }} ----- //
       theme: ThemeData.light().copyWith(
         appBarTheme: const AppBarTheme(

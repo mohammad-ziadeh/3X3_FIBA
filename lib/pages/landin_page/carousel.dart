@@ -70,7 +70,7 @@ class _CarouselWidgetState extends State<CarouselWidget> {
   Widget build(BuildContext context) {
     return Center(
       child: ConstrainedBox(
-        constraints: const BoxConstraints(maxWidth: 1000, maxHeight: 500),
+        constraints: const BoxConstraints(maxWidth: 1050, maxHeight: 700),
 
         child: SizedBox(
           height: MediaQuery.of(context).size.height * 0.6,
@@ -132,7 +132,7 @@ class _CarouselWidgetState extends State<CarouselWidget> {
                 ),
               ),
               Positioned(
-                top: MediaQuery.of(context).size.height * 0.342,
+                top: MediaQuery.of(context).size.height * 0.405,
                 left: 0,
                 right: 0,
                 child: Center(
