@@ -4,8 +4,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 class ResponsiveAppBar extends StatelessWidget implements PreferredSizeWidget {
   final VoidCallback onToggleTheme;
 
-  const ResponsiveAppBar({Key? key, required this.onToggleTheme})
-    : super(key: key);
+  const ResponsiveAppBar({super.key, required this.onToggleTheme});
 
   @override
   Widget build(BuildContext context) {
@@ -78,8 +77,7 @@ class _AppBarMenuItem extends StatelessWidget {
   final String title;
   final String? route;
 
-  const _AppBarMenuItem({required this.title, this.route, Key? key})
-    : super(key: key);
+  const _AppBarMenuItem({required this.title, this.route});
 
   @override
   Widget build(BuildContext context) {
