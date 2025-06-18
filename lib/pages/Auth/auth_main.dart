@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:fiba_3x3/pages/Auth/signUp/gender_and_birth.dart';
+import 'package:fiba_3x3/pages/Auth/signUp/signup.dart';
 import 'package:fiba_3x3/pages/Auth/login/login.dart';
-import 'package:fiba_3x3/pages/Auth/signUp/sign_up_form.dart';
+import 'package:fiba_3x3/pages/Auth/signUp/creating_success.dart';
 import 'package:animations/animations.dart';
 
 class AuthMain extends StatefulWidget {

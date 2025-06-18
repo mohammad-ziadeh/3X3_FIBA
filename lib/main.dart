@@ -1,9 +1,10 @@
 import 'package:fiba_3x3/pages/ball_info/ball.dart';
+import 'package:fiba_3x3/splashScreen.dart';
 import 'package:fiba_3x3/widgets/smoothScroll.dart';
 import 'package:flutter/material.dart';
 import 'pages/landin_page/home.dart';
 import 'pages/profile/profile.dart';
-import 'pages/Auth/auth_main.dart';
+// import 'pages/Auth/auth_main.dart';
 import 'widgets/search.dart/search_event.dart';
 import 'widgets/search.dart/search_player.dart';
 import 'pages/rules/rules.dart';
@@ -75,7 +76,8 @@ class _MyAppState extends State<MyApp> {
       // ----- {{ End Dark Theme }} ----- //
       themeMode: _themeMode,
       debugShowCheckedModeBanner: false,
-      home: AuthMain(onToggleTheme: _toggleTheme),
+      home: SplashScreen(onToggleTheme: _toggleTheme),
+
       routes: {
         '/home': (context) => Home(onToggleTheme: _toggleTheme),
         '/profile': (context) => ProfilePage(onToggleTheme: _toggleTheme),

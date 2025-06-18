@@ -39,6 +39,49 @@ class AuthService {
     }
   }
 
+  Future<String?> register({
+    required String firstName,
+    required String lastName,
+    required String gender,
+    required String birthDate,
+    required String role,
+    required String email,
+    required String password,
+    required String passwordConfirmation,
+  }) async {
+    final response = await http.post(
+      Uri.parse('$baseUrl/api/register'),
+      headers: {'Accept': 'application/json'},
+      body: {
+        'first_name': firstName,
+        'last_name': lastName,
+        'gender': gender.toLowerCase(),
+        'birth_date': birthDate,
+        'role': role,
+        'email': email,
+        'password': password,
+        'password_confirmation': passwordConfirmation,
+      },
+    );
+
+    if (response.statusCode == 201) {
+      final data = jsonDecode(response.body);
+      await _storage.write(key: 'token', value: data['token']);
+      await _storage.write(key: 'user', value: jsonEncode(data['user']));
+      return null; // success, no error message
+    } else {
+      try {
+        final errorResponse = jsonDecode(response.body);
+        if (errorResponse is Map && errorResponse.containsKey('message')) {
+          return errorResponse['message'];
+        }
+        return 'Registration failed';
+      } catch (e) {
+        return 'Registration failed';
+      }
+    }
+  }
+
   Future<Map<String, dynamic>?> getUser() async {
     final token = await _storage.read(key: 'token');
     if (token == null) return null;

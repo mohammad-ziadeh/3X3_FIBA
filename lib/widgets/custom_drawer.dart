@@ -1,3 +1,5 @@
+import 'package:fiba_3x3/pages/Auth/auth_main.dart';
+import 'package:fiba_3x3/services/auth_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
@@ -77,6 +79,23 @@ class CustomDrawer extends StatelessWidget {
                   ),
                   _DrawerMenuItem(title: 'ORGANIZERS'),
                   _DrawerMenuItem(title: 'FEDERATIONS'),
+
+                  // 🔴 Logout Button
+                  const Divider(color: Colors.white30),
+                  _DrawerMenuItem(
+                    title: 'LOGOUT',
+                    onTap: () async {
+                      final authService = AuthService();
+                      await authService
+                          .logout(); // This will clear token from storage
+                      Navigator.of(context).pushAndRemoveUntil(
+                        MaterialPageRoute(
+                          builder: (_) => AuthMain(onToggleTheme: () {}),
+                        ),
+                        (route) => false,
+                      );
+                    },
+                  ),
                 ],
               ),
             ),
