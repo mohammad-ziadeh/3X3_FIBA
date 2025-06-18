@@ -13,6 +13,7 @@ class CustomDrawer extends StatelessWidget {
           children: [
             Container(
               height: 70,
+
               padding: const EdgeInsets.all(16),
               color: const Color.fromARGB(255, 34, 34, 34),
               child: Row(
@@ -27,6 +28,7 @@ class CustomDrawer extends StatelessWidget {
                     icon: const Icon(Icons.close, color: Colors.white),
                     padding: const EdgeInsets.only(bottom: 8, left: 13),
                     onPressed: () => Navigator.of(context).pop(),
+                    hoverColor: Colors.white.withOpacity(0.0),
                   ),
                 ],
               ),

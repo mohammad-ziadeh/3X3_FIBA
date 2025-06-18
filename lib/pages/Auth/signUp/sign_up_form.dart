@@ -67,6 +67,12 @@ class SignUpFormStepTwo extends StatelessWidget {
       child: Column(
         children: [
           buildTextField(
+            "Phone Number",
+            "Enter your phone number",
+            keyboardType: TextInputType.phone,
+          ),
+          const SizedBox(height: 32),
+          buildTextField(
             "Email",
             "Enter your email",
             suffix: SvgPicture.string(mailIcon),
@@ -80,11 +86,13 @@ class SignUpFormStepTwo extends StatelessWidget {
           ),
           const SizedBox(height: 16),
           buildTextField(
-            "Phone Number",
-            "Enter your phone number",
-            keyboardType: TextInputType.phone,
+            "Confirm Password",
+            "Enter your password again",
+            obscure: true,
+            suffix: SvgPicture.string(lockIcon),
           ),
           const SizedBox(height: 32),
+
           ElevatedButton(
             onPressed: () {
               onBack();

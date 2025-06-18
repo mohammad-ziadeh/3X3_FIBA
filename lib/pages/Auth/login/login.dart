@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:fiba_3x3/pages/Auth/login/search_player_event.dart';
+import 'package:fiba_3x3/services/auth_service.dart';
 
 class LoginPage extends StatelessWidget {
   final VoidCallback onNext;
@@ -72,25 +73,65 @@ const authOutlineInputBorder = OutlineInputBorder(
   borderRadius: BorderRadius.all(Radius.circular(16)),
 );
 
-class SignInForm extends StatelessWidget {
+class SignInForm extends StatefulWidget {
   const SignInForm({super.key});
+
+  @override
+  State<SignInForm> createState() => _SignInFormState();
+}
+
+class _SignInFormState extends State<SignInForm> {
+  final _formKey = GlobalKey<FormState>();
+  final _emailController = TextEditingController();
+  final _passwordController = TextEditingController();
+  bool _isLoading = false;
+
+  Future<void> _handleLogin() async {
+    if (!_formKey.currentState!.validate()) return;
+
+    setState(() => _isLoading = true);
+    try {
+      final error = await AuthService().login(
+        _emailController.text.trim(),
+        _passwordController.text.trim(),
+      );
+      if (error == null) {
+        if (!mounted) return;
+        Navigator.pushNamed(context, '/home');
+      } else {
+        if (!mounted) return;
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text(error)));
+      }
+    } catch (e) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text('An error occurred: $e')));
+    } finally {
+      if (mounted) setState(() => _isLoading = false);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     return Form(
+      key: _formKey,
       child: Column(
         children: [
           TextFormField(
-            onSaved: (email) {},
-            onChanged: (email) {},
+            controller: _emailController,
             style: const TextStyle(color: Colors.black),
             textInputAction: TextInputAction.next,
+            validator:
+                (value) =>
+                    value == null || value.isEmpty ? 'Enter email' : null,
             decoration: InputDecoration(
               hintText: "user@example.com",
-              labelStyle: TextStyle(color: Colors.black),
               labelText: "Email",
-              floatingLabelBehavior: FloatingLabelBehavior.always,
               hintStyle: const TextStyle(color: Color(0xFF757575)),
+              labelStyle: const TextStyle(color: Colors.black),
               contentPadding: const EdgeInsets.symmetric(
                 horizontal: 24,
                 vertical: 16,
@@ -109,15 +150,16 @@ class SignInForm extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.symmetric(vertical: 24),
             child: TextFormField(
-              onSaved: (password) {},
-              onChanged: (password) {},
-              style: const TextStyle(color: Colors.black),
+              controller: _passwordController,
               obscureText: true,
+              style: const TextStyle(color: Colors.black),
+              validator:
+                  (value) =>
+                      value == null || value.isEmpty ? 'Enter password' : null,
               decoration: InputDecoration(
-                labelStyle: TextStyle(color: Colors.black),
                 hintText: "Password",
                 labelText: "Password",
-                floatingLabelBehavior: FloatingLabelBehavior.always,
+                labelStyle: const TextStyle(color: Colors.black),
                 hintStyle: const TextStyle(color: Color(0xFF757575)),
                 contentPadding: const EdgeInsets.symmetric(
                   horizontal: 24,
@@ -137,19 +179,22 @@ class SignInForm extends StatelessWidget {
           ),
           const SizedBox(height: 8),
           ElevatedButton(
-            onPressed: () {
-              Navigator.pushNamed(context, '/home');
-            },
+            onPressed: _isLoading ? null : _handleLogin,
+
             style: ElevatedButton.styleFrom(
               elevation: 0,
               backgroundColor: Colors.black,
               foregroundColor: Colors.white,
+
               minimumSize: const Size(double.infinity, 48),
               shape: const RoundedRectangleBorder(
                 borderRadius: BorderRadius.all(Radius.circular(16)),
               ),
             ),
-            child: const Text("Login"),
+            child:
+                _isLoading
+                    ? const CircularProgressIndicator(color: Colors.white)
+                    : const Text("Login"),
           ),
         ],
       ),

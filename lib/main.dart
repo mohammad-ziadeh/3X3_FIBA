@@ -1,7 +1,7 @@
 import 'package:fiba_3x3/pages/ball_info/ball.dart';
 import 'package:fiba_3x3/widgets/smoothScroll.dart';
 import 'package:flutter/material.dart';
-import 'pages/home.dart';
+import 'pages/landin_page/home.dart';
 import 'pages/profile/profile.dart';
 import 'pages/Auth/auth_main.dart';
 import 'widgets/search.dart/search_event.dart';
