@@ -2,7 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:fiba_3x3/pages/landin_page/carousel.dart';
-import 'package:fiba_3x3/pages/landin_page/cards.dart';
+import 'package:fiba_3x3/pages/landin_page/event_cards/cards.dart';
 import 'package:fiba_3x3/pages/landin_page/socialIcons.dart';
 // import 'package:fiba_3x3/components/promote.dart';
 
