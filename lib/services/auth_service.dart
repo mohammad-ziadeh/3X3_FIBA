@@ -98,6 +98,8 @@ class AuthService {
     return null;
   }
 
+  
+
   Future<void> logout() async {
     final token = await _storage.read(key: 'token');
     if (token != null) {

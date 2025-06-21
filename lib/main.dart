@@ -1,10 +1,10 @@
 import 'package:fiba_3x3/pages/ball_info/ball.dart';
+import 'package:fiba_3x3/pages/teams/team_list_page.dart';
 import 'package:fiba_3x3/splashScreen.dart';
 import 'package:fiba_3x3/widgets/smoothScroll.dart';
 import 'package:flutter/material.dart';
 import 'pages/landin_page/home.dart';
 import 'pages/profile/profile.dart';
-// import 'pages/Auth/auth_main.dart';
 import 'widgets/search.dart/search_event.dart';
 import 'widgets/search.dart/search_player.dart';
 import 'pages/rules/rules.dart';
@@ -84,6 +84,7 @@ class _MyAppState extends State<MyApp> {
         '/ball-info':
             (context) => Official3x3BallPage(onToggleTheme: _toggleTheme),
         '/rules': (context) => RulesPage(onToggleTheme: _toggleTheme),
+        '/team': (context) => TeamListPage(onToggleTheme: _toggleTheme),
         '/search-event': (context) => SearchEvent(onToggleTheme: _toggleTheme),
         '/search-player':
             (context) => SearchPlayer(onToggleTheme: _toggleTheme),

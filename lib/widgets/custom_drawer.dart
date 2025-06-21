@@ -77,17 +77,19 @@ class CustomDrawer extends StatelessWidget {
                       Navigator.of(context).pushNamed('/search-player');
                     },
                   ),
-                  _DrawerMenuItem(title: 'ORGANIZERS'),
-                  _DrawerMenuItem(title: 'FEDERATIONS'),
-
-                  // 🔴 Logout Button
+                  _DrawerMenuItem(
+                    title: 'TEAMS',
+                    onTap: () {
+                      Navigator.of(context).pushNamed('/team');
+                    },
+                  ),
                   const Divider(color: Colors.white30),
                   _DrawerMenuItem(
                     title: 'LOGOUT',
                     onTap: () async {
                       final authService = AuthService();
                       await authService
-                          .logout(); // This will clear token from storage
+                          .logout();
                       Navigator.of(context).pushAndRemoveUntil(
                         MaterialPageRoute(
                           builder: (_) => AuthMain(onToggleTheme: () {}),
