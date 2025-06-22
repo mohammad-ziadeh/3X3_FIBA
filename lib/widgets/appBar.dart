@@ -1,10 +1,44 @@
+import 'package:fiba_3x3/services/NotificationService.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
-class ResponsiveAppBar extends StatelessWidget implements PreferredSizeWidget {
+class ResponsiveAppBar extends StatefulWidget implements PreferredSizeWidget {
   final VoidCallback onToggleTheme;
 
   const ResponsiveAppBar({super.key, required this.onToggleTheme});
+
+  @override
+  State<ResponsiveAppBar> createState() => _ResponsiveAppBarState();
+
+  @override
+  Size get preferredSize => const Size.fromHeight(kToolbarHeight);
+}
+
+class _ResponsiveAppBarState extends State<ResponsiveAppBar> {
+  late NotificationService notificationService;
+  int unreadCount = 0;
+  bool isLoading = true;
+
+  @override
+  void initState() {
+    super.initState();
+    notificationService = NotificationService();
+    _loadUnreadCount();
+  }
+
+  Future<void> _loadUnreadCount() async {
+    try {
+      final count = await notificationService.getUnreadCount();
+      setState(() {
+        unreadCount = count;
+        isLoading = false;
+      });
+    } catch (e) {
+      setState(() {
+        isLoading = false;
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -23,6 +57,39 @@ class ResponsiveAppBar extends StatelessWidget implements PreferredSizeWidget {
         ],
       ),
       actions: [
+        Stack(
+          children: [
+            IconButton(
+              icon: const Icon(Icons.notifications),
+              onPressed: () {
+                Navigator.of(context).pushNamed('/notifications').then((_) {
+                  _loadUnreadCount();
+                });
+              },
+            ),
+            if (unreadCount > 0 && !isLoading)
+              Positioned(
+                right: 5,
+                top: 5,
+                child: Container(
+                  padding: const EdgeInsets.all(4),
+                  decoration: BoxDecoration(
+                    color: Colors.red,
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  constraints: const BoxConstraints(
+                    minWidth: 15,
+                    minHeight: 15,
+                  ),
+                  child: Text(
+                    '$unreadCount',
+                    style: const TextStyle(color: Colors.white, fontSize: 12),
+                    textAlign: TextAlign.center,
+                  ),
+                ),
+              ),
+          ],
+        ),
         if (isWideScreen)
           Container(
             constraints: const BoxConstraints(maxWidth: 800),
@@ -40,8 +107,8 @@ class ResponsiveAppBar extends StatelessWidget implements PreferredSizeWidget {
                   _AppBarMenuItem(title: 'ORGANIZERS'),
                   _AppBarMenuItem(title: 'FEDERATIONS'),
                   IconButton(
-                    icon: Icon(Icons.brightness_6),
-                    onPressed: onToggleTheme,
+                    icon: const Icon(Icons.brightness_6),
+                    onPressed: widget.onToggleTheme,
                   ),
                 ],
               ),
@@ -53,8 +120,8 @@ class ResponsiveAppBar extends StatelessWidget implements PreferredSizeWidget {
                 (context) => Row(
                   children: [
                     IconButton(
-                      icon: Icon(Icons.brightness_6),
-                      onPressed: onToggleTheme,
+                      icon: const Icon(Icons.brightness_6),
+                      onPressed: widget.onToggleTheme,
                     ),
                     IconButton(
                       icon: const Icon(Icons.menu),
@@ -69,7 +136,6 @@ class ResponsiveAppBar extends StatelessWidget implements PreferredSizeWidget {
     );
   }
 
-  @override
   Size get preferredSize => const Size.fromHeight(kToolbarHeight);
 }
 

@@ -4,7 +4,7 @@ import 'package:fiba_3x3/services/team_service.dart';
 class EditTeamPage extends StatefulWidget {
   final Map<String, dynamic>? team;
 
-  const EditTeamPage({Key? key, this.team}) : super(key: key);
+  const EditTeamPage({super.key, this.team});
 
   @override
   State<EditTeamPage> createState() => _EditTeamPageState();

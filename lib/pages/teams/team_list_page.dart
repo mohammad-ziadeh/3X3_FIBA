@@ -8,7 +8,7 @@ import 'manage_players_page.dart';
 class TeamListPage extends StatefulWidget {
   final VoidCallback onToggleTheme;
 
-  const TeamListPage({Key? key, required this.onToggleTheme}) : super(key: key);
+  const TeamListPage({super.key, required this.onToggleTheme});
 
   @override
   State<TeamListPage> createState() => _TeamListPageState();

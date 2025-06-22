@@ -221,6 +221,8 @@ class TeamService {
     final userMap = jsonDecode(userJson);
     return userMap['role'] as String?;
   }
+
+
 }
 
 class AppUser {

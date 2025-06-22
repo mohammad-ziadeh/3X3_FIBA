@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:fiba_3x3/pages/landin_page/event_cards/event_detail_screen.dart';
 import 'package:fiba_3x3/services/event_service.dart';
 import 'package:flutter/material.dart';
@@ -8,10 +9,10 @@ class EventCard extends StatefulWidget {
   const EventCard({super.key});
 
   @override
-  State<EventCard> createState() => _EventCardState();
+  State<EventCard> createState() => EventCardState();
 }
 
-class _EventCardState extends State<EventCard> {
+class EventCardState extends State<EventCard> {
   late Future<List<Event>> futureEvents;
   bool isLoading = true;
   final DateFormat dateFormat = DateFormat('yyyy-MM-dd');
@@ -28,6 +29,14 @@ class _EventCardState extends State<EventCard> {
     setState(() {
       isLoading = false;
     });
+  }
+
+  Future<void> refreshEvents() async {
+    setState(() {
+      futureEvents = EventService().getEvents();
+      isLoading = true;
+    });
+    await _simulateLoading();
   }
 
   Widget buildCard(BuildContext context, Event event) {
@@ -67,23 +76,34 @@ class _EventCardState extends State<EventCard> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Image.network(
-                      event.imageUrl ?? 'https://picsum.photos/600/220',
+                    CachedNetworkImage(
+                      imageUrl:
+                          event.imageUrl != null
+                              ? '${event.imageUrl}?v=${event.updatedAt.millisecondsSinceEpoch}'
+                              : 'https://picsum.photos/600/220',
                       width: double.infinity,
                       height: 220,
                       fit: BoxFit.cover,
-                      errorBuilder: (context, error, stackTrace) {
-                        return Container(
-                          width: double.infinity,
-                          height: 220,
-                          color: Colors.grey[300],
-                          child: const Icon(
-                            Icons.broken_image,
-                            size: 50,
-                            color: Colors.grey,
+                      placeholder:
+                          (context, url) => Container(
+                            width: double.infinity,
+                            height: 220,
+                            color: Colors.grey[300],
+                            child: const Center(
+                              child: CircularProgressIndicator(),
+                            ),
                           ),
-                        );
-                      },
+                      errorWidget:
+                          (context, url, error) => Container(
+                            width: double.infinity,
+                            height: 220,
+                            color: Colors.grey[300],
+                            child: const Icon(
+                              Icons.broken_image,
+                              size: 50,
+                              color: Colors.grey,
+                            ),
+                          ),
                     ),
 
                     Padding(
@@ -242,6 +262,7 @@ class _EventCardState extends State<EventCard> {
                         endDate: DateTime.now(),
                         eventCode: '',
                         imageUrl: null,
+                        updatedAt: DateTime.now(),
                       ),
                     ),
                   ),

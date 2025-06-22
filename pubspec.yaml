@@ -54,6 +54,8 @@ dependencies:
   shared_preferences: ^2.5.3
   universal_io: ^2.2.2
   intl: ^0.20.2
+  cached_network_image: ^3.2.3
+  flutter_local_notifications: ^19.3.0
 
 dev_dependencies:
   flutter_test:

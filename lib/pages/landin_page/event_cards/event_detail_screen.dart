@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:fiba_3x3/services/event_service.dart';
 import 'package:fiba_3x3/services/team_service.dart';
@@ -7,7 +8,7 @@ import 'package:intl/intl.dart';
 class EventDetailScreen extends StatefulWidget {
   final Event event;
 
-  const EventDetailScreen({Key? key, required this.event}) : super(key: key);
+  const EventDetailScreen({super.key, required this.event});
 
   @override
   State<EventDetailScreen> createState() => _EventDetailScreenState();
@@ -19,6 +20,7 @@ class _EventDetailScreenState extends State<EventDetailScreen> {
   bool isLoading = true;
   bool isAssigning = false;
   String? error;
+  Map<String, dynamic>? assignedTeam;
   final DateFormat dateFormat = DateFormat('yyyy-MM-dd');
 
   final TeamService _teamService = TeamService();
@@ -102,12 +104,17 @@ class _EventDetailScreenState extends State<EventDetailScreen> {
     final iconColor = isDark ? Colors.white : Colors.black;
     final borderColor = isDark ? Colors.white : Colors.black;
 
+    final imageUrlWithVersion =
+        widget.event.imageUrl != null
+            ? '${widget.event.imageUrl}?v=${widget.event.updatedAt.millisecondsSinceEpoch}'
+            : 'https://picsum.photos/600/220';
+
     return Scaffold(
       appBar: AppBar(
-        title: Text(widget.event.title, style: TextStyle(color: bgColor)),
-        backgroundColor: textColor,
+        title: Text(widget.event.title, style: TextStyle(color: Colors.white)),
+        backgroundColor: Colors.black,
         elevation: 1,
-        iconTheme: IconThemeData(color: bgColor),
+        iconTheme: IconThemeData(color: Colors.white),
       ),
       backgroundColor: bgColor,
       body: SingleChildScrollView(
@@ -119,13 +126,20 @@ class _EventDetailScreenState extends State<EventDetailScreen> {
               tag: widget.event.id,
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(16),
-                child: Image.network(
-                  widget.event.imageUrl ?? 'https://picsum.photos/600/220',
+                child: CachedNetworkImage(
+                  imageUrl: imageUrlWithVersion, // Use the new URL here
                   width: double.infinity,
                   height: 220,
                   fit: BoxFit.cover,
-                  errorBuilder:
-                      (_, __, ___) => Container(
+                  placeholder:
+                      (context, url) => Container(
+                        width: double.infinity,
+                        height: 220,
+                        color: isDark ? Colors.black : Colors.white,
+                        child: const Center(child: CircularProgressIndicator()),
+                      ),
+                  errorWidget:
+                      (context, url, error) => Container(
                         width: double.infinity,
                         height: 220,
                         color: isDark ? Colors.black : Colors.white,
@@ -161,7 +175,7 @@ class _EventDetailScreenState extends State<EventDetailScreen> {
                 ),
               ],
             ),
-            const SizedBox(height: 6),
+            const SizedBox(height: 10),
             Row(
               children: [
                 Icon(Icons.date_range, color: iconColor),
@@ -175,7 +189,7 @@ class _EventDetailScreenState extends State<EventDetailScreen> {
                 ),
               ],
             ),
-            const SizedBox(height: 6),
+            const SizedBox(height: 10),
             Row(
               children: [
                 Icon(Icons.vpn_key, color: iconColor),
@@ -199,7 +213,7 @@ class _EventDetailScreenState extends State<EventDetailScreen> {
                 ),
               ),
               Text(
-                'Only one team can be assigned per coach',
+                'You can only assign one of your teams to this event.',
                 style: theme.textTheme.bodyMedium?.copyWith(
                   color: secondaryTextColor,
                 ),
@@ -262,7 +276,24 @@ class _EventDetailScreenState extends State<EventDetailScreen> {
                     ),
                   ),
                 ),
-              const SizedBox(height: 30),
+
+              const SizedBox(height: 15),
+
+              // Text(
+              //   'You selected:',
+              //   style: theme.textTheme.titleMedium?.copyWith(
+              //     fontWeight: FontWeight.bold,
+              //     color: textColor,
+              //   ),
+              // ),
+              // const SizedBox(height: 8),
+              // Text(
+              //   assignedTeam != null
+              //       ? assignedTeam!['name']
+              //       : 'No team assigned yet',
+              //   style: theme.textTheme.bodyLarge?.copyWith(color: textColor),
+              // ),
+              const SizedBox(height: 15),
               SizedBox(
                 width: double.infinity,
                 child: ElevatedButton(

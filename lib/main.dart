@@ -1,4 +1,5 @@
 import 'package:fiba_3x3/pages/ball_info/ball.dart';
+import 'package:fiba_3x3/pages/notifications/notifications_screen.dart';
 import 'package:fiba_3x3/pages/teams/team_list_page.dart';
 import 'package:fiba_3x3/splashScreen.dart';
 import 'package:fiba_3x3/widgets/smoothScroll.dart';
@@ -86,6 +87,7 @@ class _MyAppState extends State<MyApp> {
         '/rules': (context) => RulesPage(onToggleTheme: _toggleTheme),
         '/team': (context) => TeamListPage(onToggleTheme: _toggleTheme),
         '/search-event': (context) => SearchEvent(onToggleTheme: _toggleTheme),
+        '/notifications': (context) => NotificationsScreen(),
         '/search-player':
             (context) => SearchPlayer(onToggleTheme: _toggleTheme),
       },

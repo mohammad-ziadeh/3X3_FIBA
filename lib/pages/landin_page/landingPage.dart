@@ -1,19 +1,23 @@
 // ignore_for_file: file_names
-
 import 'package:flutter/material.dart';
 import 'package:fiba_3x3/pages/landin_page/carousel.dart';
 import 'package:fiba_3x3/pages/landin_page/event_cards/cards.dart';
 import 'package:fiba_3x3/pages/landin_page/socialIcons.dart';
-// import 'package:fiba_3x3/components/promote.dart';
 
 class MainPage extends StatefulWidget {
   const MainPage({super.key});
 
   @override
-  State<MainPage> createState() => _MainPageState();
+  State<MainPage> createState() => MainPageState();
 }
 
-class _MainPageState extends State<MainPage> {
+class MainPageState extends State<MainPage> {
+final GlobalKey<EventCardState> _eventCardKey = GlobalKey<EventCardState>();
+
+  Future<void> refreshEventCard() async {
+    await _eventCardKey.currentState?.refreshEvents();
+  }
+
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
@@ -21,22 +25,18 @@ class _MainPageState extends State<MainPage> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           CarouselWidget(),
-          SizedBox(height: 40),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Text(
-                'NEXT EVENTS',
-                textAlign: TextAlign.center,
-                style: TextStyle(fontSize: 25, fontWeight: FontWeight.w900),
-              ),
-            ],
+          const SizedBox(height: 40),
+          const Center(
+            child: Text(
+              'NEXT EVENTS',
+              textAlign: TextAlign.center,
+              style: TextStyle(fontSize: 25, fontWeight: FontWeight.w900),
+            ),
           ),
-          SizedBox(height: 40),
-          EventCard(),
+          const SizedBox(height: 40),
+          EventCard(key: _eventCardKey),
           SocialFollowSection(),
-          // Promote(),
-          SizedBox(height: 40),
+          const SizedBox(height: 40),
         ],
       ),
     );

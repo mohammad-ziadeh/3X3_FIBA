@@ -10,6 +10,7 @@ class Event {
   final DateTime endDate;
   final String eventCode;
   final String? imageUrl;
+  final DateTime updatedAt;
 
   Event({
     required this.id,
@@ -18,6 +19,7 @@ class Event {
     required this.startDate,
     required this.endDate,
     required this.eventCode,
+    required this.updatedAt,
     this.imageUrl,
   });
 
@@ -35,6 +37,7 @@ class Event {
       id: json['id'],
       title: json['title'],
       location: json['location'],
+      updatedAt: DateTime.parse(json['updated_at']),
       startDate: DateTime.parse(json['start_date']),
       endDate: DateTime.parse(json['end_date']),
       eventCode: json['event_code'],

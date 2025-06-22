@@ -7,7 +7,7 @@ import 'package:skeletonizer/skeletonizer.dart';
 class ManagePlayersPage extends StatefulWidget {
   final Map<String, dynamic> team;
 
-  const ManagePlayersPage({Key? key, required this.team}) : super(key: key);
+  const ManagePlayersPage({super.key, required this.team});
 
   @override
   State<ManagePlayersPage> createState() => _ManagePlayersPageState();
@@ -90,7 +90,6 @@ class _ManagePlayersPageState extends State<ManagePlayersPage> {
         await _teamService.removePlayerFromTeam(teamId: teamId, userId: id);
       }
 
-      // Update assignedPlayers locally to match selectedPlayerIds
       setState(() {
         assignedPlayers =
             allPlayers
@@ -98,11 +97,9 @@ class _ManagePlayersPageState extends State<ManagePlayersPage> {
                 .map((player) => {'user_id': player.id, 'name': player.name})
                 .toList();
 
-        // Update the original team map players list to keep it consistent
         widget.team['players'] = assignedPlayers;
       });
 
-      // Send the updated assignedPlayers back to the previous screen
       Navigator.pop(context, assignedPlayers);
 
       ScaffoldMessenger.of(context).showSnackBar(
