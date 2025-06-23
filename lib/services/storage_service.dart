@@ -8,7 +8,6 @@ abstract class IStorage {
   Future<void> delete({required String key});
 }
 
-// Secure storage for mobile
 class MobileStorage implements IStorage {
   final _storage = const FlutterSecureStorage();
 
@@ -23,7 +22,6 @@ class MobileStorage implements IStorage {
   Future<void> delete({required String key}) => _storage.delete(key: key);
 }
 
-// Shared preferences for web
 class WebStorage implements IStorage {
   @override
   Future<void> write({required String key, required String value}) async {
@@ -44,5 +42,4 @@ class WebStorage implements IStorage {
   }
 }
 
-// Factory to get right storage implementation
 IStorage getStorage() => kIsWeb ? WebStorage() : MobileStorage();

@@ -135,10 +135,17 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
                           "Event: ${notif.eventTitle}",
                           style: TextStyle(color: Colors.white70),
                         ),
-                        Text(
-                          "Assigned by: ${notif.assignedBy}",
-                          style: TextStyle(color: Colors.white70),
-                        ),
+                        if (notif.startDate != null && notif.endDate != null)
+                          Text(
+                            "Start: ${notif.startDate!.toLocal().toString().split(' ')[0]} - End: ${notif.endDate!.toLocal().toString().split(' ')[0]}",
+                            style: TextStyle(color: Colors.white70),
+                          ),
+
+                        if (notif.assignedBy.isNotEmpty)
+                          Text(
+                            "Assigned by: ${notif.assignedBy}",
+                            style: TextStyle(color: Colors.white70),
+                          ),
                         if (notif.readAt != null)
                           Text(
                             "Read at: ${notif.readAt!.toLocal().toString().split('.')[0]}",

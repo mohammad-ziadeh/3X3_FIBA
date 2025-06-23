@@ -5,17 +5,21 @@ import 'package:flutter/foundation.dart';
 import 'api_config.dart';
 
 class UserNotification {
-  final String id; // UUID string
+  final String id;
   final int eventId;
   final String eventTitle;
   final String message;
   final String assignedBy;
+  final DateTime? startDate;
+  final DateTime? endDate;
   final String coachName;
   final DateTime? readAt;
 
   UserNotification({
     required this.id,
     required this.eventId,
+    required this.startDate,
+    required this.endDate,
     required this.eventTitle,
     required this.message,
     required this.assignedBy,
@@ -25,18 +29,20 @@ class UserNotification {
 
   factory UserNotification.fromJson(Map<String, dynamic> json) {
     return UserNotification(
-      id: json['id'] ?? '', // Default to empty string if null
-      eventId: json['event_id'] ?? 0, // Default to 0 if null
+      id: json['id'] ?? '',
+      eventId: json['event_id'] ?? 0,
       eventTitle: json['event_title'] ?? 'No title',
       message: json['message'] ?? '',
       assignedBy: json['assigned_by'] ?? 'Unknown',
       coachName: json['coach_name'] ?? 'Unknown',
-      readAt:
-          json['read_at'] != null
-              ? DateTime.tryParse(
-                json['read_at'],
-              ) // Use tryParse to avoid exceptions
+      startDate:
+          json['start_date'] != null
+              ? DateTime.tryParse(json['start_date'])
               : null,
+      endDate:
+          json['end_date'] != null ? DateTime.tryParse(json['end_date']) : null,
+      readAt:
+          json['read_at'] != null ? DateTime.tryParse(json['read_at']) : null,
     );
   }
 }
@@ -64,7 +70,6 @@ class NotificationService {
         final List<dynamic> data = decoded['data'];
         return data.map((json) => UserNotification.fromJson(json)).toList();
       } else if (decoded is List) {
-        // If response is just a list (rare)
         return decoded.map((json) => UserNotification.fromJson(json)).toList();
       } else {
         throw Exception('Unexpected response format: $decoded');

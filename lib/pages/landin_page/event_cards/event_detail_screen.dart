@@ -27,11 +27,16 @@ class _EventDetailScreenState extends State<EventDetailScreen> {
 
   String? userRole;
 
+  List<Map<String, dynamic>> assignedTeams = [];
+  bool isLoadingAssignedTeams = true;
+  String? assignedTeamsError;
+
   @override
   void initState() {
     super.initState();
     _loadUserRole();
     _loadCoachTeams();
+    _loadAssignedTeams();
   }
 
   Future<void> _loadUserRole() async {
@@ -61,6 +66,26 @@ class _EventDetailScreenState extends State<EventDetailScreen> {
     }
   }
 
+  Future<void> _loadAssignedTeams() async {
+    setState(() {
+      isLoadingAssignedTeams = true;
+      assignedTeamsError = null;
+    });
+
+    try {
+      final teams = await _teamService.getTeamsAssignedToEvent(widget.event.id);
+      setState(() {
+        assignedTeams = List<Map<String, dynamic>>.from(teams);
+        isLoadingAssignedTeams = false;
+      });
+    } catch (e) {
+      setState(() {
+        assignedTeamsError = e.toString();
+        isLoadingAssignedTeams = false;
+      });
+    }
+  }
+
   Future<void> _assignTeam() async {
     if (selectedTeamId == null) {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -82,6 +107,8 @@ class _EventDetailScreenState extends State<EventDetailScreen> {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Team successfully assigned to event!')),
       );
+
+      await _loadAssignedTeams();
     } catch (e) {
       ScaffoldMessenger.of(
         context,
@@ -111,10 +138,13 @@ class _EventDetailScreenState extends State<EventDetailScreen> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text(widget.event.title, style: TextStyle(color: Colors.white)),
+        title: Text(
+          widget.event.title,
+          style: const TextStyle(color: Colors.white),
+        ),
         backgroundColor: Colors.black,
         elevation: 1,
-        iconTheme: IconThemeData(color: Colors.white),
+        iconTheme: const IconThemeData(color: Colors.white),
       ),
       backgroundColor: bgColor,
       body: SingleChildScrollView(
@@ -127,7 +157,7 @@ class _EventDetailScreenState extends State<EventDetailScreen> {
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(16),
                 child: CachedNetworkImage(
-                  imageUrl: imageUrlWithVersion, // Use the new URL here
+                  imageUrl: imageUrlWithVersion,
                   width: double.infinity,
                   height: 220,
                   fit: BoxFit.cover,
@@ -276,23 +306,6 @@ class _EventDetailScreenState extends State<EventDetailScreen> {
                     ),
                   ),
                 ),
-
-              const SizedBox(height: 15),
-
-              // Text(
-              //   'You selected:',
-              //   style: theme.textTheme.titleMedium?.copyWith(
-              //     fontWeight: FontWeight.bold,
-              //     color: textColor,
-              //   ),
-              // ),
-              // const SizedBox(height: 8),
-              // Text(
-              //   assignedTeam != null
-              //       ? assignedTeam!['name']
-              //       : 'No team assigned yet',
-              //   style: theme.textTheme.bodyLarge?.copyWith(color: textColor),
-              // ),
               const SizedBox(height: 15),
               SizedBox(
                 width: double.infinity,
@@ -325,6 +338,54 @@ class _EventDetailScreenState extends State<EventDetailScreen> {
                           ),
                 ),
               ),
+
+              const SizedBox(height: 30),
+              Text(
+                'Teams assigned to this event:',
+                style: theme.textTheme.titleMedium?.copyWith(
+                  fontWeight: FontWeight.bold,
+                  color: textColor,
+                ),
+              ),
+              const SizedBox(height: 10),
+              if (isLoadingAssignedTeams)
+                Center(child: CircularProgressIndicator(color: iconColor))
+              else if (assignedTeamsError != null)
+                Center(
+                  child: Text(
+                    'Error loading assigned teams: $assignedTeamsError',
+                    style: const TextStyle(color: Colors.redAccent),
+                  ),
+                )
+              else if (assignedTeams.isEmpty)
+                Text(
+                  'No teams assigned to this event yet.',
+                  style: theme.textTheme.bodyMedium?.copyWith(
+                    color: secondaryTextColor,
+                  ),
+                )
+              else
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children:
+                      assignedTeams.map((team) {
+                        return Container(
+                          margin: const EdgeInsets.symmetric(vertical: 6),
+                          padding: const EdgeInsets.all(12),
+                          decoration: BoxDecoration(
+                            border: Border.all(color: borderColor),
+                            borderRadius: BorderRadius.circular(8),
+                            color: isDark ? Colors.grey[900] : Colors.grey[100],
+                          ),
+                          child: Text(
+                            team['name'] ?? 'Unnamed Team',
+                            style: theme.textTheme.bodyLarge?.copyWith(
+                              color: textColor,
+                            ),
+                          ),
+                        );
+                      }).toList(),
+                ),
             ] else ...[
               const SizedBox(height: 30),
               Center(

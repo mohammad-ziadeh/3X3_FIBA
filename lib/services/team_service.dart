@@ -222,7 +222,20 @@ class TeamService {
     return userMap['role'] as String?;
   }
 
+  Future<List<dynamic>> getTeamsAssignedToEvent(int eventId) async {
+    final token = await fetchToken();
 
+    final response = await http.get(
+      Uri.parse('${ApiConfig.baseUrl}/api/events/$eventId/teams'),
+      headers: {'Authorization': 'Bearer $token', 'Accept': 'application/json'},
+    );
+
+    if (response.statusCode == 200) {
+      return jsonDecode(response.body);
+    } else {
+      throw Exception('Failed to load assigned teams');
+    }
+  }
 }
 
 class AppUser {

@@ -12,7 +12,7 @@ class MainPage extends StatefulWidget {
 }
 
 class MainPageState extends State<MainPage> {
-final GlobalKey<EventCardState> _eventCardKey = GlobalKey<EventCardState>();
+  final GlobalKey<EventCardState> _eventCardKey = GlobalKey<EventCardState>();
 
   Future<void> refreshEventCard() async {
     await _eventCardKey.currentState?.refreshEvents();

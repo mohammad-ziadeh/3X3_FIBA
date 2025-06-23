@@ -2,9 +2,31 @@ import 'package:fiba_3x3/pages/Auth/auth_main.dart';
 import 'package:fiba_3x3/services/auth_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:fiba_3x3/services/team_service.dart';
 
-class CustomDrawer extends StatelessWidget {
+class CustomDrawer extends StatefulWidget {
   const CustomDrawer({super.key});
+
+  @override
+  State<CustomDrawer> createState() => _CustomDrawerState();
+}
+
+class _CustomDrawerState extends State<CustomDrawer> {
+  String? role;
+
+  @override
+  void initState() {
+    super.initState();
+    loadRole();
+  }
+
+  Future<void> loadRole() async {
+    final teamService = TeamService();
+    final r = await teamService.getUserRole();
+    setState(() {
+      role = r;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -77,19 +99,21 @@ class CustomDrawer extends StatelessWidget {
                       Navigator.of(context).pushNamed('/search-player');
                     },
                   ),
-                  _DrawerMenuItem(
-                    title: 'TEAMS',
-                    onTap: () {
-                      Navigator.of(context).pushNamed('/team');
-                    },
-                  ),
+                  if (role == 'coach' || role == 'admin') ...[
+                    _DrawerMenuItem(
+                      title: 'TEAMS',
+                      onTap: () {
+                        Navigator.of(context).pushNamed('/team');
+                      },
+                    ),
+                  ],
+
                   const Divider(color: Colors.white30),
                   _DrawerMenuItem(
                     title: 'LOGOUT',
                     onTap: () async {
                       final authService = AuthService();
-                      await authService
-                          .logout();
+                      await authService.logout();
                       Navigator.of(context).pushAndRemoveUntil(
                         MaterialPageRoute(
                           builder: (_) => AuthMain(onToggleTheme: () {}),

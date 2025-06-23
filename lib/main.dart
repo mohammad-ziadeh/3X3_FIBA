@@ -6,8 +6,8 @@ import 'package:fiba_3x3/widgets/smoothScroll.dart';
 import 'package:flutter/material.dart';
 import 'pages/landin_page/home.dart';
 import 'pages/profile/profile.dart';
-import 'widgets/search.dart/search_event.dart';
-import 'widgets/search.dart/search_player.dart';
+import 'pages/search.dart/search_event.dart';
+import 'pages/search.dart/search_player.dart';
 import 'pages/rules/rules.dart';
 
 void main() {

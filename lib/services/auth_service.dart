@@ -68,7 +68,7 @@ class AuthService {
       final data = jsonDecode(response.body);
       await _storage.write(key: 'token', value: data['token']);
       await _storage.write(key: 'user', value: jsonEncode(data['user']));
-      return null; // success, no error message
+      return null;
     } else {
       try {
         final errorResponse = jsonDecode(response.body);

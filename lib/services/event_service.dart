@@ -1,5 +1,4 @@
 import 'dart:convert';
-
 import 'package:http/http.dart' as http;
 
 class Event {
@@ -29,7 +28,6 @@ class Event {
 
     if (rawImage != null && rawImage.isNotEmpty) {
       final filename = rawImage.split('/').last;
-
       imageUrl = 'http://192.168.1.159:8000/cors-image/$filename';
     }
 
@@ -57,5 +55,46 @@ class EventService {
     } else {
       throw "Failed to load events";
     }
+  }
+}
+
+Future<List<Event>> fetchEvents({
+  String filter = 'upcoming',
+  String? search,
+  String? season,
+  String? location,
+}) async {
+  final uri = Uri.parse(
+    'http://192.168.1.159:8000/api/next-events/search',
+  ).replace(
+    queryParameters: {
+      'filter': filter,
+      if (search != null && search.trim().isNotEmpty) 'search': search.trim(),
+      if (season != null && season != 'Any season') 'season': season,
+      if (location != null && location != 'Any location') 'location': location,
+    },
+  );
+
+  final response = await http.get(uri);
+  if (response.statusCode == 200) {
+    final List<dynamic> jsonData = json.decode(response.body);
+    return jsonData.map((e) => Event.fromJson(e)).toList();
+  } else {
+    throw Exception('Failed to load events');
+  }
+}
+
+Future<List<String>> fetchSuggestions(String query) async {
+  final uri = Uri.parse(
+    'http://192.168.1.159:8000/api/next-events/suggestions',
+  ).replace(queryParameters: {'q': query});
+
+  final response = await http.get(uri);
+
+  if (response.statusCode == 200) {
+    final List<dynamic> jsonData = json.decode(response.body);
+    return jsonData.map((e) => e.toString()).toList();
+  } else {
+    throw Exception('Failed to fetch suggestions');
   }
 }
