@@ -1,6 +1,8 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
+import 'package:fiba_3x3/pages/landin_page/event_cards/matchup_detail_screen.dart';
 import 'package:fiba_3x3/services/event_service.dart';
+import 'package:fiba_3x3/services/matchup_events_service.dart';
 import 'package:fiba_3x3/services/team_service.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -31,12 +33,19 @@ class _EventDetailScreenState extends State<EventDetailScreen> {
   bool isLoadingAssignedTeams = true;
   String? assignedTeamsError;
 
+  List<Matchup> eventMatchups = [];
+  bool isLoadingMatchups = true;
+  String? matchupError;
+  late MatchupService _matchupService;
+
   @override
   void initState() {
     super.initState();
+    _matchupService = MatchupService();
     _loadUserRole();
     _loadCoachTeams();
     _loadAssignedTeams();
+    _loadMatchups();
   }
 
   Future<void> _loadUserRole() async {
@@ -44,6 +53,43 @@ class _EventDetailScreenState extends State<EventDetailScreen> {
     setState(() {
       userRole = role;
     });
+  }
+
+  bool get isRegistrationClosed {
+    final now = DateTime.now();
+    final startDate = widget.event.startDate;
+    final difference = startDate.difference(now).inDays;
+    return difference < 1;
+  }
+
+  Future<void> _loadMatchups() async {
+    setState(() {
+      isLoadingMatchups = true;
+      matchupError = null;
+    });
+    try {
+      final eventWithMatchups = await _matchupService.fetchEventsWithMatchups();
+      final eventMatchup = eventWithMatchups.firstWhere(
+        (e) => e.id == widget.event.id,
+        orElse:
+            () => EventWithMatchups(
+              id: -1,
+              title: '',
+              eventCode: '',
+              teams: [],
+              matchups: [],
+            ),
+      );
+      setState(() {
+        eventMatchups = eventMatchup.matchups;
+        isLoadingMatchups = false;
+      });
+    } catch (e) {
+      setState(() {
+        matchupError = e.toString();
+        isLoadingMatchups = false;
+      });
+    }
   }
 
   Future<void> _loadCoachTeams() async {
@@ -234,7 +280,8 @@ class _EventDetailScreenState extends State<EventDetailScreen> {
             ),
             const SizedBox(height: 30),
 
-            if (userRole == 'coach' || userRole == 'admin') ...[
+            if ((userRole == 'coach' || userRole == 'admin') &&
+                !isRegistrationClosed) ...[
               Text(
                 'Assign your team to this event',
                 style: theme.textTheme.titleMedium?.copyWith(
@@ -386,6 +433,135 @@ class _EventDetailScreenState extends State<EventDetailScreen> {
                         );
                       }).toList(),
                 ),
+            ] else if ((userRole == 'coach' ||
+                    userRole == 'admin' ||
+                    userRole == 'player') &&
+                isRegistrationClosed) ...[
+              const SizedBox(height: 30),
+              if (isLoadingMatchups)
+                Center(child: CircularProgressIndicator(color: iconColor))
+              else if (matchupError != null)
+                Center(
+                  child: Text(
+                    'Error loading match-ups: $matchupError',
+                    style: const TextStyle(color: Colors.redAccent),
+                  ),
+                )
+              else if (eventMatchups.isEmpty)
+                Center(
+                  child: Text(
+                    'Matches will be created soon.',
+                    style: theme.textTheme.bodyLarge?.copyWith(
+                      color: Colors.orangeAccent,
+                      fontWeight: FontWeight.w600,
+                    ),
+                    textAlign: TextAlign.center,
+                  ),
+                )
+              else
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Match-ups:',
+                      style: theme.textTheme.titleMedium?.copyWith(
+                        fontWeight: FontWeight.bold,
+                        color: textColor,
+                      ),
+                    ),
+                    const SizedBox(height: 10),
+                    ...eventMatchups.map((matchup) {
+                      final matchTime =
+                          matchup.matchTime != null
+                              ? DateFormat(
+                                'MMM d, h:mm a',
+                              ).format(matchup.matchTime!)
+                              : 'TBD';
+
+                      return InkWell(
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder:
+                                  (_) => MatchupDetailScreen(
+                                    matchupId: matchup.id,
+                                  ),
+                            ),
+                          );
+                        },
+                        child: Container(
+                          padding: const EdgeInsets.all(12),
+                          decoration: BoxDecoration(
+                            color:
+                                isDark
+                                    ? const Color.fromARGB(255, 52, 52, 66)
+                                    : Colors.grey[100],
+                          ),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text(
+                                '${matchup.teamA.name}   VS   ${matchup.teamB.name}',
+                                style: theme.textTheme.bodyLarge?.copyWith(
+                                  color: textColor,
+                                ),
+                              ),
+                              Text(
+                                matchTime,
+                                style: theme.textTheme.bodyMedium?.copyWith(
+                                  color: secondaryTextColor,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      );
+                    }).toList(),
+                  ],
+                ),
+              const SizedBox(height: 30),
+              if (isLoadingAssignedTeams) ...[
+                Center(child: CircularProgressIndicator(color: iconColor)),
+              ] else if (assignedTeamsError != null) ...[
+                Center(
+                  child: Text(
+                    'Error loading assigned teams: $assignedTeamsError',
+                    style: const TextStyle(color: Colors.redAccent),
+                  ),
+                ),
+              ] else if (assignedTeams.isEmpty) ...[
+                Text(
+                  'No teams assigned to this event yet.',
+                  style: theme.textTheme.bodyMedium?.copyWith(
+                    color: secondaryTextColor,
+                  ),
+                ),
+              ] else if (eventMatchups.isEmpty) ...[
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children:
+                      assignedTeams.map((team) {
+                        return Container(
+                          margin: const EdgeInsets.symmetric(vertical: 6),
+                          padding: const EdgeInsets.all(12),
+                          decoration: BoxDecoration(
+                            border: Border.all(color: borderColor),
+                            borderRadius: BorderRadius.circular(8),
+                            color: isDark ? Colors.grey[900] : Colors.grey[100],
+                          ),
+                          child: Text(
+                            team['name'] ?? 'Unnamed Team',
+                            style: theme.textTheme.bodyLarge?.copyWith(
+                              color: textColor,
+                            ),
+                          ),
+                        );
+                      }).toList(),
+                ),
+              ] else ...[
+                const Text(''), // fallback widget
+              ],
             ] else ...[
               const SizedBox(height: 30),
               Center(
@@ -398,6 +574,48 @@ class _EventDetailScreenState extends State<EventDetailScreen> {
                   textAlign: TextAlign.center,
                 ),
               ),
+              const SizedBox(height: 30),
+              if (isLoadingAssignedTeams) ...[
+                Center(child: CircularProgressIndicator(color: iconColor)),
+              ] else if (assignedTeamsError != null) ...[
+                Center(
+                  child: Text(
+                    'Error loading assigned teams: $assignedTeamsError',
+                    style: const TextStyle(color: Colors.redAccent),
+                  ),
+                ),
+              ] else if (assignedTeams.isEmpty) ...[
+                Text(
+                  'No teams assigned to this event yet.',
+                  style: theme.textTheme.bodyMedium?.copyWith(
+                    color: secondaryTextColor,
+                  ),
+                ),
+              ] else if (eventMatchups.isEmpty) ...[
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children:
+                      assignedTeams.map((team) {
+                        return Container(
+                          margin: const EdgeInsets.symmetric(vertical: 6),
+                          padding: const EdgeInsets.all(12),
+                          decoration: BoxDecoration(
+                            border: Border.all(color: borderColor),
+                            borderRadius: BorderRadius.circular(8),
+                            color: isDark ? Colors.grey[900] : Colors.grey[100],
+                          ),
+                          child: Text(
+                            team['name'] ?? 'Unnamed Team',
+                            style: theme.textTheme.bodyLarge?.copyWith(
+                              color: textColor,
+                            ),
+                          ),
+                        );
+                      }).toList(),
+                ),
+              ] else ...[
+                const Text(''), // fallback widget
+              ],
             ],
           ],
         ),
