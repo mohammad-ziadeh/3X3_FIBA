@@ -5,6 +5,7 @@ import 'package:fiba_3x3/services/event_service.dart';
 import 'package:fiba_3x3/services/matchup_events_service.dart';
 import 'package:fiba_3x3/services/team_service.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:intl/intl.dart';
 
 class EventDetailScreen extends StatefulWidget {
@@ -170,7 +171,6 @@ class _EventDetailScreenState extends State<EventDetailScreen> {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final isDark = theme.brightness == Brightness.dark;
-
     final bgColor = isDark ? Colors.black : Colors.white;
     final textColor = isDark ? Colors.white : Colors.black;
     final secondaryTextColor = isDark ? Colors.white70 : Colors.black87;
@@ -471,12 +471,20 @@ class _EventDetailScreenState extends State<EventDetailScreen> {
                     ),
                     const SizedBox(height: 10),
                     ...eventMatchups.map((matchup) {
-                      final matchTime =
-                          matchup.matchTime != null
-                              ? DateFormat(
-                                'MMM d, h:mm a',
-                              ).format(matchup.matchTime!)
-                              : 'TBD';
+                      final now = DateTime.now();
+                      bool isLiveOrSoon = false;
+                      String formattedMatchTime = 'TBD';
+
+                      if (matchup.matchTime != null) {
+                        final matchDateTime = matchup.matchTime!;
+                        final diff = matchDateTime.difference(now).inMinutes;
+
+                        isLiveOrSoon = (diff >= -30 && diff <= 30);
+
+                        formattedMatchTime = DateFormat(
+                          'MMM d, h:mm a',
+                        ).format(matchDateTime);
+                      }
 
                       return InkWell(
                         onTap: () {
@@ -501,17 +509,47 @@ class _EventDetailScreenState extends State<EventDetailScreen> {
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              Text(
-                                '${matchup.teamA.name}   VS   ${matchup.teamB.name}',
-                                style: theme.textTheme.bodyLarge?.copyWith(
-                                  color: textColor,
+                              Expanded(
+                                child: Row(
+                                  children: [
+                                    Text(
+                                      '${matchup.teamA.name}   VS   ${matchup.teamB.name}',
+                                      style: theme.textTheme.bodyLarge
+                                          ?.copyWith(color: textColor),
+                                    ),
+                                  ],
                                 ),
                               ),
-                              Text(
-                                matchTime,
-                                style: theme.textTheme.bodyMedium?.copyWith(
-                                  color: secondaryTextColor,
-                                ),
+                              Row(
+                                children: [
+                                  if (isLiveOrSoon)
+                                    Row(
+                                      children: [
+                                        SpinKitThreeBounce(
+                                          color: Colors.green,
+                                          size: 16.0,
+                                        ),
+                                        const SizedBox(width: 4),
+                                        Text(
+                                          'Live',
+                                          style: TextStyle(
+                                            fontSize: 12,
+                                            color: Colors.green,
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                        ),
+                                        const SizedBox(width: 10),
+                                      ],
+                                    )
+                                  else ...[
+                                    Text(
+                                      formattedMatchTime,
+                                      style: theme.textTheme.bodyMedium
+                                          ?.copyWith(color: secondaryTextColor),
+                                    ),
+                                    const SizedBox(width: 8),
+                                  ],
+                                ],
                               ),
                             ],
                           ),
@@ -560,7 +598,7 @@ class _EventDetailScreenState extends State<EventDetailScreen> {
                       }).toList(),
                 ),
               ] else ...[
-                const Text(''), // fallback widget
+                const Text(''),
               ],
             ] else ...[
               const SizedBox(height: 30),

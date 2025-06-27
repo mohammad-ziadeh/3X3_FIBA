@@ -390,7 +390,7 @@ class _SearchEventState extends State<SearchEvent>
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => PastEventDetailScreen(event: event),
+                    builder: (context) => EventDetailScreen(event: event),
                   ),
                 );
               } else {

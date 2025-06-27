@@ -80,6 +80,12 @@ class _CustomDrawerState extends State<CustomDrawer> {
                       Navigator.of(context).pushNamed('/search-event');
                     },
                   ),
+                  _DrawerMenuItem(
+                    title: 'NEWS',
+                    onTap: () {
+                      Navigator.of(context).pushNamed('/news');
+                    },
+                  ),
                   _DrawerMenuItem(title: 'RANKINGS'),
                   _DrawerMenuItem(
                     title: 'BALL INFO',

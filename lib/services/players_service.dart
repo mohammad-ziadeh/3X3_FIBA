@@ -7,14 +7,17 @@ class Player {
   final String name;
   // final String city;
   // final String country;
-  final String gender; 
-  final String ageCategory; 
+  final String gender;
+  final String avatarUrl;
+  final String ageCategory;
 
   Player({
     required this.id,
     required this.name,
     // required this.city,
     // required this.country,
+    required this.avatarUrl,
+
     required this.gender,
     required this.ageCategory,
   });
@@ -25,6 +28,7 @@ class Player {
     // city: json['city'],
     // country: json['country'],
     gender: json['gender'],
+    avatarUrl: json['avatar_url'] ?? '',
     ageCategory: json['age_category'],
   );
 }

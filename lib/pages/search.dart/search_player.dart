@@ -287,16 +287,31 @@ class _SearchPlayerState extends State<SearchPlayer>
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(
-                    player.name,
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 16,
-                      color:
-                          Theme.of(context).brightness == Brightness.dark
-                              ? Colors.white
-                              : Colors.black,
-                    ),
+                  Row(
+                    children: [
+                      CircleAvatar(
+                        radius: 20,
+                        backgroundImage:
+                            (player.avatarUrl.isNotEmpty)
+                                ? NetworkImage(player.avatarUrl)
+                                : const AssetImage(
+                                      'assets/images/profile-male.png',
+                                    )
+                                    as ImageProvider,
+                      ),
+                      SizedBox(width: 16),
+                      Text(
+                        player.name,
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 16,
+                          color:
+                              Theme.of(context).brightness == Brightness.dark
+                                  ? Colors.white
+                                  : Colors.black,
+                        ),
+                      ),
+                    ],
                   ),
                   const SizedBox(height: 8),
                   Row(

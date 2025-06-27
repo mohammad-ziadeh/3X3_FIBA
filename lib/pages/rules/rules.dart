@@ -1,11 +1,10 @@
-import 'dart:async';
 import 'package:fiba_3x3/pages/rules/pdf_scrore.dart';
 import 'package:fiba_3x3/pages/rules/rules_table.dart';
 import 'package:fiba_3x3/pages/rules/pdf_rules.dart';
 import 'package:fiba_3x3/widgets/appBar.dart';
 import 'package:fiba_3x3/widgets/custom_drawer.dart';
 import 'package:flutter/material.dart';
-import 'package:video_player/video_player.dart';
+import 'package:youtube_player_iframe/youtube_player_iframe.dart';
 
 class RulesPage extends StatefulWidget {
   final VoidCallback onToggleTheme;
@@ -18,10 +17,8 @@ class RulesPage extends StatefulWidget {
 
 class _RulesPageState extends State<RulesPage>
     with SingleTickerProviderStateMixin {
-  late VideoPlayerController _videoController;
+  late YoutubePlayerController _ytController;
   late TabController _tabController;
-  bool _isVideoInitialized = false;
-  Timer? _hideControlsTimer;
 
   @override
   void initState() {
@@ -29,60 +26,29 @@ class _RulesPageState extends State<RulesPage>
 
     _tabController = TabController(length: 2, vsync: this);
 
-    _videoController = VideoPlayerController.asset('assets/videos/rules.mp4')
-      ..initialize().then((_) {
-        setState(() {
-          _isVideoInitialized = true;
-          _videoController.setLooping(true);
-        });
-      });
+    _ytController = YoutubePlayerController.fromVideoId(
+      videoId: 'mu_Ogwqyyic',
+      autoPlay: false,
+      params: const YoutubePlayerParams(
+        mute: false,
+        loop: true,
+        showControls: true,
+        showFullscreenButton: true,
+      ),
+    );
   }
 
   @override
   void dispose() {
-    _videoController.dispose();
-    _hideControlsTimer?.cancel();
+    _ytController.close();
     _tabController.dispose();
     super.dispose();
   }
 
-  Widget _buildVideoPlayer() {
-    if (!_isVideoInitialized) {
-      return const Center(child: CircularProgressIndicator());
-    }
-
-    return GestureDetector(
-      child: AspectRatio(
-        aspectRatio: _videoController.value.aspectRatio,
-        child: Stack(
-          alignment: Alignment.bottomRight,
-          children: [
-            VideoPlayer(_videoController),
-            VideoProgressIndicator(_videoController, allowScrubbing: true),
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: IconButton(
-                iconSize: 30,
-                icon: Icon(
-                  _videoController.value.isPlaying
-                      ? Icons.pause
-                      : Icons.play_arrow,
-                  color: Colors.white,
-                ),
-                onPressed: () {
-                  setState(() {
-                    if (_videoController.value.isPlaying) {
-                      _videoController.pause();
-                    } else {
-                      _videoController.play();
-                    }
-                  });
-                },
-              ),
-            ),
-          ],
-        ),
-      ),
+  Widget _buildYouTubePlayer() {
+    return YoutubePlayerControllerProvider(
+      controller: _ytController,
+      child: YoutubePlayer(aspectRatio: 16 / 9, controller: _ytController),
     );
   }
 
@@ -158,7 +124,7 @@ class _RulesPageState extends State<RulesPage>
                 ),
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(10),
-                  child: _buildVideoPlayer(),
+                  child: _buildYouTubePlayer(),
                 ),
               ),
             ),

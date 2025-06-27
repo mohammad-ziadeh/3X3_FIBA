@@ -1,10 +1,14 @@
-import 'package:fiba_3x3/widgets/appBar.dart';
+import 'dart:io';
+
 import 'package:flutter/material.dart';
+import 'package:fiba_3x3/widgets/appBar.dart';
 import 'package:fiba_3x3/widgets/custom_drawer.dart';
 import 'package:fiba_3x3/pages/profile/profile_about.dart';
 import 'package:fiba_3x3/pages/profile/profile_events.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:lottie/lottie.dart';
 import 'package:skeletonizer/skeletonizer.dart';
+import 'package:fiba_3x3/services/profile_service.dart';
 
 class ProfilePage extends StatefulWidget {
   final VoidCallback onToggleTheme;
@@ -16,12 +20,49 @@ class ProfilePage extends StatefulWidget {
 
 class _ProfilePageState extends State<ProfilePage>
     with SingleTickerProviderStateMixin {
-  late final TabController _tabController;
+  late TabController _tabController;
+  Profile? profile;
+  bool isLoading = true;
 
   @override
   void initState() {
     super.initState();
     _tabController = TabController(length: 4, vsync: this);
+    _loadProfile();
+  }
+
+  Future<void> _loadProfile() async {
+    try {
+      final service = ProfileService();
+      final result = await service.fetchProfile();
+
+      setState(() {
+        profile = result;
+        isLoading = false;
+      });
+    } catch (e) {
+      setState(() {
+        isLoading = false;
+      });
+      print("Failed to load profile: $e");
+    }
+  }
+
+  Future<void> _refreshProfile(BuildContext context) async {
+    try {
+      final service = ProfileService();
+      final updatedProfile = await service.fetchProfile();
+
+      if (mounted) {
+        setState(() {
+          profile = updatedProfile;
+        });
+      }
+    } catch (e) {
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text('Failed to refresh profile: $e')));
+    }
   }
 
   @override
@@ -34,128 +75,110 @@ class _ProfilePageState extends State<ProfilePage>
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: ResponsiveAppBar(onToggleTheme: widget.onToggleTheme),
-      body: Column(
-        children: [
-          const Expanded(flex: 2, child: _TopPortion()),
-          Expanded(
-            flex: 3,
-            child: Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Column(
-                children: [
-                  Text(
-                    "Mohammad ziadeh",
-                    style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  const SizedBox(height: 16),
-
-                  const SizedBox(height: 16),
-                  const _ProfileInfoRow(),
-                  const SizedBox(height: 20),
-                  Expanded(
-                    child: Column(
-                      children: [
-                        SizedBox(
-                          height: 48,
-                          child: TabBar(
-                            controller: _tabController,
-                            isScrollable: true,
-                            indicatorColor:
-                                Theme.of(context).brightness == Brightness.dark
-                                    ? Colors.white
-                                    : Colors.black,
-                            labelColor:
-                                Theme.of(context).brightness == Brightness.dark
-                                    ? Colors.white
-                                    : Colors.black,
-                            unselectedLabelColor: Colors.grey,
-                            tabs: const [
-                              Tab(text: 'ABOUT'),
-                              Tab(text: 'ACTIVITY'),
-                              Tab(text: 'RANKING'),
-                              Tab(text: 'SOCIAL MEDIA'),
-                            ],
-                          ),
-                        ),
-                        Expanded(
-                          child: TabBarView(
-                            controller: _tabController,
-                            children: [
-                              PlayerAboutPage(),
-
-                              PlayedEventsPage(),
-                              Center(
-                                child: Text(
-                                  'Found 0 players',
-                                  style: TextStyle(
-                                    color:
-                                        Theme.of(context).brightness ==
-                                                Brightness.dark
-                                            ? Colors.white
-                                            : Colors.black,
-                                  ),
-                                ),
-                              ),
-                              Center(
-                                child: Text(
-                                  'Found 0 players',
-                                  style: TextStyle(
-                                    color:
-                                        Theme.of(context).brightness ==
-                                                Brightness.dark
-                                            ? Colors.white
-                                            : Colors.black,
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
+      body: RefreshIndicator(
+        onRefresh: () => _refreshProfile(context),
+        child: SingleChildScrollView(
+          physics: const AlwaysScrollableScrollPhysics(),
+          child: Column(
+            children: [
+              SizedBox(
+                height: 300,
+                child: _TopPortion(
+                  profile: profile,
+                  onImageChanged: () => _refreshProfile(context),
+                ),
               ),
-            ),
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Column(
+                  children: [
+                    Text(
+                      isLoading ? "Loading..." : profile?.name ?? "Guest",
+                      style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    const SizedBox(height: 16),
+                    _ProfileInfoRow(profile: profile, loading: isLoading),
+                    const SizedBox(height: 20),
+                    SizedBox(
+                      height: 48,
+                      child: TabBar(
+                        controller: _tabController,
+                        isScrollable: true,
+                        indicatorColor:
+                            Theme.of(context).brightness == Brightness.dark
+                                ? Colors.white
+                                : Colors.black,
+                        labelColor:
+                            Theme.of(context).brightness == Brightness.dark
+                                ? Colors.white
+                                : Colors.black,
+                        unselectedLabelColor: Colors.grey,
+                        tabs: const [
+                          Tab(text: 'ABOUT'),
+                          Tab(text: 'ACTIVITY'),
+                          Tab(text: 'RANKING'),
+                          Tab(text: 'SOCIAL MEDIA'),
+                        ],
+                      ),
+                    ),
+                    SizedBox(
+                      height: 400,
+                      child: TabBarView(
+                        controller: _tabController,
+                        children: [
+                          PlayerAboutPage(profile: profile),
+                          PlayedEventsPage(profile: profile),
+                          Center(child: Text('${profile?.points ?? 0} Points')),
+                          const Center(child: Text('Coming Soon')),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
           ),
-        ],
+        ),
       ),
+
       endDrawer: const CustomDrawer(),
     );
   }
 }
 
 class _ProfileInfoRow extends StatelessWidget {
-  const _ProfileInfoRow();
+  final Profile? profile;
+  final bool loading;
 
-  final List<ProfileInfoItem> _items = const [
-    ProfileInfoItem("Rank", 1),
-    ProfileInfoItem("Points", 3000),
-    ProfileInfoItem("Team Rank", 3),
-  ];
+  const _ProfileInfoRow({Key? key, this.profile, required this.loading})
+    : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    final items = [
+      ProfileInfoItem("Rank", profile?.rank ?? "N/A"),
+      ProfileInfoItem("Points", profile?.points ?? 0),
+      ProfileInfoItem("Team Rank", "N/A"),
+    ];
+
     return Container(
       height: 80,
       constraints: const BoxConstraints(maxWidth: 400),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children:
-            _items
-                .map(
-                  (item) => Expanded(
-                    child: Row(
-                      children: [
-                        if (_items.indexOf(item) != 0) const VerticalDivider(),
-                        Expanded(child: _singleItem(context, item)),
-                      ],
-                    ),
-                  ),
-                )
-                .toList(),
+            items.map((item) {
+              return Expanded(
+                child: Row(
+                  children: [
+                    if (items.indexOf(item) != 0) const VerticalDivider(),
+                    Expanded(child: _singleItem(context, item)),
+                  ],
+                ),
+              );
+            }).toList(),
       ),
     );
   }
@@ -177,12 +200,17 @@ class _ProfileInfoRow extends StatelessWidget {
 
 class ProfileInfoItem {
   final String title;
-  final int value;
+  final dynamic value;
+
   const ProfileInfoItem(this.title, this.value);
 }
 
 class _TopPortion extends StatefulWidget {
-  const _TopPortion();
+  final Profile? profile;
+  final VoidCallback onImageChanged;
+
+  const _TopPortion({Key? key, this.profile, required this.onImageChanged})
+    : super(key: key);
 
   @override
   State<_TopPortion> createState() => _TopPortionState();
@@ -191,16 +219,34 @@ class _TopPortion extends StatefulWidget {
 class _TopPortionState extends State<_TopPortion> {
   bool isLoading = true;
 
+  Future<void> _changeImage(BuildContext context, String type) async {
+    final picker = ImagePicker();
+    final pickedFile = await picker.pickImage(source: ImageSource.gallery);
+
+    if (pickedFile != null) {
+      try {
+        File imageFile = File(pickedFile.path);
+
+        await ProfileService().uploadProfileImage(type, imageFile);
+
+        widget.onImageChanged();
+      } catch (e) {
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text('Failed to upload $type image')));
+      }
+    }
+  }
+
   @override
   void initState() {
     super.initState();
-    _simulateLoading();
-  }
-
-  Future<void> _simulateLoading() async {
-    await Future.delayed(const Duration(seconds: 2));
-    setState(() {
-      isLoading = false;
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      Future.delayed(const Duration(seconds: 2), () {
+        setState(() {
+          isLoading = false;
+        });
+      });
     });
   }
 
@@ -211,32 +257,37 @@ class _TopPortionState extends State<_TopPortion> {
       children: [
         Skeletonizer(
           enabled: isLoading,
-          child: Container(
-            width: 1200,
-            margin: const EdgeInsets.only(bottom: 50),
-            decoration: const BoxDecoration(
-              borderRadius: BorderRadius.only(
-                bottomLeft: Radius.circular(50),
-                bottomRight: Radius.circular(50),
-              ),
-            ),
-            child: Image.network(
-              'https://images.unsplash.com/photo-1504450758481-7338eba7524a?q=80&w=2069&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
-              fit: BoxFit.cover,
+          child: GestureDetector(
+            onTap: () => _changeImage(context, "background_url"),
+            child: Container(
+              width: double.infinity,
+              height: 300,
+              margin: const EdgeInsets.only(bottom: 60),
+              child:
+                  widget.profile?.backgroundUrl != null
+                      ? Image.network(
+                        widget.profile!.backgroundUrl,
+                        fit: BoxFit.cover,
+                        errorBuilder: (context, error, stackTrace) {
+                          return Image.asset(
+                            'assets/images/profile_cover_image3.jpg',
+                            fit: BoxFit.cover,
+                          );
+                        },
+                      )
+                      : Image.asset(
+                        'assets/images/profile_cover_image3.jpg',
+                        fit: BoxFit.cover,
+                      ),
             ),
           ),
         ),
-        SkeletonizerConfig(
-          data: SkeletonizerConfigData(
-            effect: const ShimmerEffect(
-              baseColor: Color.fromARGB(255, 107, 107, 107),
-              highlightColor: Color.fromARGB(255, 179, 179, 179),
-            ),
-          ),
-          child: Skeletonizer(
-            enabled: isLoading,
-            child: Align(
-              alignment: Alignment.bottomCenter,
+        Skeletonizer(
+          enabled: isLoading,
+          child: Align(
+            alignment: Alignment.bottomCenter,
+            child: GestureDetector(
+              onTap: () => _changeImage(context, "avatar_url"),
               child: SizedBox(
                 width: 150,
                 height: 150,
@@ -244,13 +295,17 @@ class _TopPortionState extends State<_TopPortion> {
                   fit: StackFit.expand,
                   children: [
                     Container(
-                      decoration: const BoxDecoration(
+                      decoration: BoxDecoration(
                         shape: BoxShape.circle,
                         image: DecorationImage(
                           fit: BoxFit.cover,
-                          image: NetworkImage(
-                            'https://images.unsplash.com/photo-1542309667-2a115d1f54c6?q=80&w=1936&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
-                          ),
+                          image:
+                              widget.profile?.avatarUrl != null
+                                  ? NetworkImage(widget.profile!.avatarUrl)
+                                  : const AssetImage(
+                                        'assets/images/profile-male.png',
+                                      )
+                                      as ImageProvider,
                         ),
                       ),
                     ),
@@ -277,7 +332,7 @@ class _TopPortionState extends State<_TopPortion> {
                                   color: Colors.white,
                                   fontSize: 14,
                                   fontWeight: FontWeight.bold,
-                                  shadows: [
+                                  shadows: const [
                                     Shadow(
                                       blurRadius: 4,
                                       color: Colors.black,
