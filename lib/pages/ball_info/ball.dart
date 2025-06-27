@@ -46,7 +46,7 @@ class _Official3x3BallPageState extends State<Official3x3BallPage> {
               alignment: Alignment.center,
               children: [
                 Image.asset(
-                  'assets/images/ball-Info.jpeg',
+                  'assets/images/ball-Info.jpg',
                   width: double.infinity,
                   height: 500,
                   fit: BoxFit.cover,
